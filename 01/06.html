@@ -12,50 +12,49 @@
       padding: 20px;
     }
     .video-js {
-      width: 960px;
-      height: 480px;
+      width: 1024px;
+      height: 600px;
     }
     #video-wrapper {
       position: relative;
       display: inline-block;
     }
-    #quiz-container {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 960px;
-    height: 450px;
-    padding-bottom: 30px;
-    box-sizing: border-box;
-    color: white;
-    /* background-color: rgba(0, 0, 0, 0.5); */
-    z-index: 10;
-    pointer-events: auto; /* 유지 */
+    #education-container {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1024px;
+      height: 570px;
+      padding-bottom: 30px;
+      box-sizing: border-box;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      font-size: 16px;
+      overflow-y: auto;
+      z-index: 10;
     }
-
-    #quiz-container.active {
+    .education-page {
+      display: none;
+      text-align: left;
+      padding: 20px 40px;
+    }
+    .education-page.active {
       display: block;
-      /* pointer-events: auto; */
     }
-
-    .quiz-question {
-      font-size: 20px;
-      margin-top: 100px;
-      pointer-events: auto;
+    #education-controls {
+      margin-top: 10px;
     }
-
-    .quiz-buttons button {
-      font-size: 18px;
-      padding: 10px 30px;
-      margin: 20px;
-      pointer-events: auto;
-    }
-    #quiz-feedback {
-      font-size: 18px;
-      margin-top: 20px;
-      pointer-events: auto;
+    .edu-nav-btn {
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      margin: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 4px;
     }
     .vjs-custom-control {
       font-size: 14px;
@@ -70,7 +69,7 @@
       min-width: 120px;
       bottom: 40px;
       left: 0;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.2);
       color: white;
       font-size: 13px;
       padding: 5px 0;
@@ -84,7 +83,16 @@
       cursor: pointer;
     }
     .dropdown-menu div:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.2);
+    }
+    #pdf-actions {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 100;
+    }
+    #pdf-actions button {
+      margin-left: 5px;
     }
   </style>
 </head>
@@ -98,13 +106,72 @@
            preload="auto"
            poster="../common/test_images/background.jpg"></video>
 
-    <div id="quiz-container">
-      <div class="quiz-question" id="quiz-question"></div>
-      <div class="quiz-buttons">
-        <button onclick="answer('O')">O</button>
-        <button onclick="answer('X')">X</button>
+    <div id="education-container">
+      <div class="education-page active" id="edu-1">
+        <h3>기업문화에 대한 이해</h3>
+        <p>
+        1) 문화의 정의<br>
+        (1) 일정한 목적, 생활 이상을 실현하고자 습득, 공유, 전달되는 행동 양식, 생활 양식이다.<br>
+        (2) 그 과정에서 만들어진 물질적, 정신적 산물을 통틀어 이르는 말이다.<br>
+        (3) 사전적 정의의 문화<br>
+        - 사회 또는 사회 구성원의 목적 실현에 기여해야 한다.<br>
+        - 누군가에게서 누군가로 전달되어야 한다.<br>
+        - 행동이나 산물로 보여야 한다.<br><br>
+
+        2) 기업문화의 정의<br>
+        (1) 거시적인 문화의 정의를 기업이라는 조직 안으로 가져온 것이다.<br>
+        (2) 내외부 문제를 해결하는 과정의 경험을 축적, 공유하는 것이다.<br>
+        (3) 에드거 샤인 교수의 정의 : 조직 구성원이 내외부의 문제를 해결하는 과정에서 경험, 축적 공유한 것이다.<br><br>
+
+        3) 기업문화의 중요성<br>
+        (1) 조직과 경영자들은 기업문화의 혁신을 중요하게 여긴다.<br>
+        (2) 현재와 미래의 구성원도 기업 문화를 가장 중요하게 여긴다.<br>
+        (3) 문화를 바라보는 눈높이를 맞추는 과정이 필요하다.<br>
+        - 같은 용어를 사용하더라도 사람마다 정의나 기본 전제가 다르면 엉뚱한 결론에 도달할 수 있기 때문이다.
+        </p>
       </div>
-      <div id="quiz-feedback" style="display:none;"></div>
+
+      <div class="education-page" id="edu-2">
+        <h3>기업문화의 방향성</h3>
+        <p>
+        1) 정체성이란?<br>
+        (1) 동일성에 기반한 정체성<br>
+        - 환경이나 상황의 변화에도 불구하고 동일한 존재이고 싶다는 의미이다.<br>
+        - '우리다움'을 지향하는 정체성 또는 변하지 않는 정체성이다.<br>
+        (2) 자기성에 기반한 정체성<br>
+        - 나는 누구인가를 끊임없이 고민하며 스스로 변화해가는 정체성이다.<br>
+        - '나다움'을 지향하는 정체성 또는 변화하는 정체성이라고 부른다.<br><br>
+
+        2) 인공지능의 발달<br>
+        (1) 인공지능의 발달은 인간에게 편리함이라는 선물을 준다.<br>
+        (2) 미래의 인간은 무슨 일을 할 것인지에 대한 과제를 던진다.<br>
+        (3) 예술 관련 분야에서조차 인공지능이 괄목할 만한 성과를 내며 논의가 한층 심화되고 있다.<br><br>
+
+        3) 모라벡의 역설<br>
+        (1) 미국의 로봇공학자인 한스 모라벡이 주장한 것이다.<br>
+        (2) 인간에게 쉬운 일은 컴퓨터에게 어렵고, 컴퓨터에게 쉬운 일은 인간에게 어렵다는 내용이다.<br>
+        (3) 인간<br>
+        - 일상 행동은 쉽게 할 수 있다.<br>
+        - 복잡한 수식 계산, 반복적인 일을 정확하게 하는 것에는 약하다.<br>
+        (4) 인공지능이나 로봇<br>
+        - 인간이 일상적으로 하는 행동을 어려워한다.<br>
+        - 수리적 계산, 데이터 분석, 반복적 행동은 매우 쉽게 한다.<br>
+        - 컴퓨터의 성능과 기술의 발달로 모라벡의 역설이 사라질 것이라는 이야기도 있다.
+        </p>
+      </div>
+
+      <div id="education-controls">
+        <button class="edu-nav-btn" onclick="prevEdu()">이전 보기</button>
+        <button class="edu-nav-btn" onclick="nextEdu()">다음 보기</button>
+      </div>
+    </div>
+
+    <div id="pdf-actions">
+      <a href="../document/summary/01.pdf" target="_blank">
+      <button class="edu-nav-btn">📥 다운로드</button>
+      </a>
+      <!-- <button class="edu-nav-btn" onclick="openAndPrintPDF()">🖨 인쇄</button> -->
+      <!-- <button class="edu-nav-btn" onclick="printPDF()">🖨 인쇄</button> -->
     </div>
   </div>
 
@@ -113,7 +180,7 @@
     const currentFile = location.pathname.split('/').pop();
     const pageNum = parseInt(currentFile.split('.')[0]);
     const paddedNum = String(pageNum).padStart(2, '0');
-    const maxPage = 8;
+    const maxPage = 7;
 
     document.getElementById('lecture-title').innerText = `${paddedNum}차시 강의`;
 
@@ -125,92 +192,52 @@
 
     const player = videojs('lecture-video');
 
-    const quizData = [
-      { q: "Q1. OX 퀴즈 첫 번째 문제입니다.", answer: "O" },
-      { q: "Q2. 두 번째 문제입니다.", answer: "O" },
-      { q: "Q3. 마지막 문제입니다.", answer: "O" }
-    ];
-    let currentQuiz = 0;
-    let correctCount = 0;
+    player.on('ended', () => {
+      document.getElementById('education-container').style.display = 'block';
+    });
 
-    function showQuiz() {
-      document.getElementById('quiz-container').classList.add('active');
-      loadQuiz();
+    let currentEdu = 1;
+    const totalEdu = 2;
+
+    function updateEduView() {
+      for (let i = 1; i <= totalEdu; i++) {
+        document.getElementById(`edu-${i}`).classList.remove('active');
+      }
+      document.getElementById(`edu-${currentEdu}`).classList.add('active');
     }
 
-    function loadQuiz() {
-      const questionEl = document.getElementById('quiz-question');
-      const feedbackEl = document.getElementById('quiz-feedback');
-      feedbackEl.style.display = "none";
-      if (currentQuiz < quizData.length) {
-        questionEl.innerText = quizData[currentQuiz].q;
+    function nextEdu() {
+      if (currentEdu < totalEdu) {
+        currentEdu++;
+        updateEduView();
       } else {
-        // 결과 표시
-        document.getElementById('quiz-container').innerHTML = `
-          <h3>퀴즈 완료!</h3>
-          <p>맞힌 개수: ${correctCount} / ${quizData.length}</p>
-          <button onclick="retryQuiz()">다시 풀기</button>
-        `;
+        alert("마지막 입니다.");
       }
     }
 
-    let answered = false;
-
-function answer(userAnswer) {
-    if (answered) return; // 이미 선택했으면 무시
-    answered = true;
-
-    const feedbackEl = document.getElementById('quiz-feedback');
-    const correctAnswer = quizData[currentQuiz].answer;
-    const numberStr = `${currentQuiz + 1}번째 문제입니다.`;
-
-    if (userAnswer === correctAnswer) {
-      feedbackEl.innerText = `정답입니다! ✅`;
-      feedbackEl.style.color = "lightgreen";
-      correctCount++;
-    } else {
-      feedbackEl.innerText = `${numberStr}`;
-      feedbackEl.style.color = "red";
+    function prevEdu() {
+      if (currentEdu > 1) {
+        currentEdu--;
+        updateEduView();
+      } else {
+        alert("처음 입니다.");
+      }
     }
 
-    feedbackEl.style.display = "block";
+    // PDF 인쇄 기능
+//     function openAndPrintPDF() {
+//   const win = window.open("../document/summary/01.pdf", "_blank");
+//   if (win) {
+//     win.focus();
+//     win.onload = () => {
+//       win.print();
+//     };
+//   } else {
+//     alert("팝업 차단이 해제되어 있어야 합니다.");
+//   }
+// }
 
-    setTimeout(() => {
-      answered = false; // 다음 문제에서 다시 활성화
-      currentQuiz++;
-      loadQuiz();
-    }, 1500);
-  }
-  
-  window.retryQuiz = function () {
-    currentQuiz = 0;
-    correctCount = 0;
-    answered = false;
-
-    document.getElementById('quiz-container').innerHTML = `
-      <div class="quiz-question" id="quiz-question"></div>
-      <div class="quiz-buttons">
-        <button onclick="answer('O')">O</button>
-        <button onclick="answer('X')">X</button>
-      </div>
-      <div id="quiz-feedback" style="display:none;"></div>
-    `;
-
-    loadQuiz();
-  };
-
-    function goNext() {
-      if (pageNum < maxPage)
-        location.href = `${String(pageNum + 1).padStart(2, '0')}.html`;
-      else
-        alert("마지막 페이지입니다.");
-    }
-
-    player.on('ended', () => {
-      showQuiz();
-    });
-
-    // ▼ 사용자 정의 버튼 ▼
+    // 사용자 정의 버튼들
     const tocButton = player.controlBar.addChild('button', { name: 'TocButton' });
     tocButton.addClass('vjs-custom-control');
     tocButton.el().innerHTML = '📖';
@@ -230,32 +257,24 @@ function answer(userAnswer) {
       if (!tocButton.el().contains(e.target)) dropdown.style.display = 'none';
     });
 
-    const prevButton = player.controlBar.addChild('button', {
-      name: 'PrevButton',
-      text: '이전'
-    });
+    const prevButton = player.controlBar.addChild('button', { name: 'PrevButton' });
     prevButton.addClass('vjs-custom-control');
     prevButton.el().innerHTML = '◀';
     prevButton.on('click', () => {
-      if (pageNum > 1) {
+      if (pageNum > 1)
         location.href = `${String(pageNum - 1).padStart(2, '0')}.html`;
-      } else {
+      else
         alert("처음 페이지입니다.");
-      }
     });
 
-    const nextButton = player.controlBar.addChild('button', {
-      name: 'NextButton',
-      text: '다음'
-    });
+    const nextButton = player.controlBar.addChild('button', { name: 'NextButton' });
     nextButton.addClass('vjs-custom-control');
     nextButton.el().innerHTML = '▶';
     nextButton.on('click', () => {
-      if (pageNum < maxPage) {
+      if (pageNum < maxPage)
         location.href = `${String(pageNum + 1).padStart(2, '0')}.html`;
-      } else {
+      else
         alert("마지막 페이지입니다.");
-      }
     });
 
     const pageDisplay = player.controlBar.addChild('component');
