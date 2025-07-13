@@ -70,7 +70,7 @@
       min-width: 120px;
       bottom: 40px;
       left: 0;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.2);
       color: white;
       font-size: 13px;
       padding: 5px 0;
@@ -84,7 +84,7 @@
       cursor: pointer;
     }
     .dropdown-menu div:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.2);
     }
   </style>
 </head>
@@ -113,7 +113,7 @@
     const currentFile = location.pathname.split('/').pop();
     const pageNum = parseInt(currentFile.split('.')[0]);
     const paddedNum = String(pageNum).padStart(2, '0');
-    const maxPage = 8;
+    const maxPage = 7;
 
     document.getElementById('lecture-title').innerText = `${paddedNum}차시 강의`;
 

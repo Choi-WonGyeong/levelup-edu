@@ -31,7 +31,7 @@
     padding: 5px 10px;   /* 텍스트 여백도 약간 늘림 */    
     bottom: 40px; /* 플레이어 하단 맞춤 */
     left: 0;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
     color: white;
     font-size: 13px;
     padding: 5px 0;
@@ -45,7 +45,7 @@
       cursor: pointer;
     }
     .dropdown-menu div:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.2);
     }
   </style>
 </head>
@@ -61,7 +61,7 @@
     const videoEl = document.getElementById('lecture-video');
     const currentFile = location.pathname.split('/').pop();  // e.g., "01.html"
     const pageNum = parseInt(currentFile.split('.')[0]);
-    const maxPage = 8;
+    const maxPage = 7;
     const paddedNum = String(pageNum).padStart(2, '0');
 
     // 제목 설정
