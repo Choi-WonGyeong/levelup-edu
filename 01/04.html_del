@@ -89,7 +89,7 @@
   </style>
 </head>
 <body>
-  <h2 id="lecture-title">차시 강의</h2>
+  <!-- <h2 id="lecture-title">차시 강의</h2> -->
 
   <div id="video-wrapper">
     <video id="lecture-video"

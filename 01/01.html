@@ -51,7 +51,7 @@
 </head>
 <body>
 
-  <h2 id="lecture-title">차시 강의</h2>
+  <!-- <h2 id="lecture-title">차시 강의</h2> -->
   <video id="lecture-video" class="video-js vjs-default-skin" controls preload="auto">
     <!-- 동적으로 <source> 추가됨 -->
   </video>
@@ -65,7 +65,7 @@
     const paddedNum = String(pageNum).padStart(2, '0');
 
     // 제목 설정
-    document.getElementById('lecture-title').innerText = `${paddedNum}차시 강의`;
+    // document.getElementById('lecture-title').innerText = `${paddedNum}차시 강의`;
 
     // 비디오 소스 추가
     const sourceEl = document.createElement('source');
