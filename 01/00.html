@@ -24,9 +24,13 @@
       background: #fff;
       border: 1px solid #ccc;
       padding: 20px 30px;
-      overflow-y: auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       position: relative;
+      overflow-y: auto;
+    }
+
+    .wrapper.noscroll {     /* 스크롤 잠금 클래스, 시작 화면에서 씀*/
+      overflow: hidden;
     }
 
     h1 {
@@ -110,7 +114,6 @@
       text-decoration: underline;
     }
 
-    /* 시작화면 */
     #start-screen {
       display: flex;
       justify-content: center;
@@ -155,12 +158,12 @@
       border: none;
       cursor: pointer;
       color: black;
-
     }
   </style>
 </head>
 <body>
-  <div class="wrapper">
+  
+  <div class="wrapper noscroll">
 
     <!-- 시작 화면 -->
     <div id="start-screen" class="visible">
@@ -170,19 +173,19 @@
 
     <h1>역량진단 평가</h1>
 
-    <!-- 페이지 1 -->
+      <!-- 페이지 1 -->
 <div id="page1" class="page visible">
-<div class="question-card">
-<div class="question-title">1. 역량진단 평가입니다</div>
-<div class="options">
-<label><input type="radio" name="q1" value="5"> 매우 그렇다</label>
-<label><input type="radio" name="q1" value="4"> 다소 그런 편이다</label>
-<label><input type="radio" name="q1" value="3"> 보통이다</label>
-<label><input type="radio" name="q1" value="2"> 그렇지 않은 편이다</label>
-<label><input type="radio" name="q1" value="1"> 전혀 그렇지 않다</label>
-</div>
-</div>
-        <div class="question-card">
+  <div class="question-card">
+    <div class="question-title">1. 역량진단 평가입니다</div>
+    <div class="options">
+      <label><input type="radio" name="q1" value="5"> 매우 그렇다</label>
+      <label><input type="radio" name="q1" value="4"> 다소 그런 편이다</label>
+      <label><input type="radio" name="q1" value="3"> 보통이다</label>
+      <label><input type="radio" name="q1" value="2"> 그렇지 않은 편이다</label>
+      <label><input type="radio" name="q1" value="1"> 전혀 그렇지 않다</label>
+    </div>
+  </div>
+  <div class="question-card">
     <div class="question-title">2. 역량진단 평가입니다</div>
     <div class="options">
       <label><input type="radio" name="q2" value="5"> 매우 그렇다</label>
@@ -296,10 +299,14 @@
     <div id="result" style="margin-top: 20px; position: relative;"></div>
   </div>
 
+
   <script>
     function startSurvey() {
       document.getElementById("start-screen").style.display = "none";
       document.getElementById("page1").classList.add("visible");
+
+      // 스크롤 잠금 해제 추가(시작화면에서 잠궜다가 설문 화면에서 풂)
+      document.querySelector(".wrapper").classList.remove("noscroll");
     }
 
     function goToExit() {
@@ -343,7 +350,6 @@
         <button class="result-close-btn" onclick="goToExit()">×</button>
         <div style="margin-top: 20px;">
           <h2>직무역량진단 결과</h2>
-
           <p>당신의 역량은 <strong>${level}</strong> 입니다. (평균: ${avg.toFixed(2)}점)</p>
           <p>나의 역량진단에 따라 보충 자료를 학습하세요.</p>
 
