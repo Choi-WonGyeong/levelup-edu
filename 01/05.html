@@ -282,6 +282,8 @@ function answer(userAnswer) {
       const controlBar = player.controlBar.el();
       controlBar.insertBefore(leftWrapper, controlBar.firstChild);
       controlBar.appendChild(rightWrapper);
+
+      player.volume(0.5);
     });
   </script>
 </body>

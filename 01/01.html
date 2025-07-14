@@ -169,6 +169,8 @@
       const controlBar = player.controlBar.el();
       controlBar.insertBefore(leftWrapper, controlBar.firstChild);
       controlBar.appendChild(rightWrapper);
+
+      player.volume(0.5); // 볼륨 default 값 절반으로 설정
     });
   </script>
 </body>
