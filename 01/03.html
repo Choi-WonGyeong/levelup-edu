@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <script src="../data/config.js"></script>
+  <title>차시 강의</title>
+  <link href="../common/lib/video-js/video-js.css" rel="stylesheet" />
+  <style>
+    :root {
+    --height_: 600px;
+    --height_30: 570px;
+    }
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    .video-js {
+      width: 1024px;
+      height: var(--height_);
+    }
+    .vjs-custom-control {
+      font-size: 14px;
+      color: white;
+      padding: 0 0px;
+      /* display: flex;
+      align-items: center; */
+      cursor: pointer;
+      position: relative;
+    }
+    .dropdown-menu {
+    display: none;
+    position: absolute;
+    min-width: 140px;     /* 기존보다 넓게 설정 (예: 60px → 80px) */
+    padding: 5px 10px;   /* 텍스트 여백도 약간 늘림 */    
+    bottom: 40px; /* 플레이어 하단 맞춤 */
+    left: 0;
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    font-size: 13px;
+    padding: 5px 0;
+    border-radius: 4px;
+    z-index: 9999;
+    max-height: 180px;
+    overflow-y: auto;
+    }
+    .dropdown-menu div {
+      padding: 5px 15px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .dropdown-menu div:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- <h2 id="lecture-title">차시 강의</h2> -->
+  <video id="lecture-video" class="video-js vjs-default-skin" controls preload="auto">
+    <!-- 동적으로 <source> 추가됨 -->
+  </video>
+
+  <script src="../common/lib/video-js/video.min.js"></script>
+  <script>
+    const videoEl = document.getElementById('lecture-video');
+    const currentFile = location.pathname.split('/').pop();  // e.g., "01.html"
+    const pageNum = parseInt(currentFile.split('.')[0]);
+    const maxPage = 6;
+    const paddedNum = String(pageNum).padStart(2, '0');
+
+    // 제목 설정
+    // document.getElementById('lecture-title').innerText = `${paddedNum}차시 강의`;
+
+    // 비디오 소스 추가
+    const sourceEl = document.createElement('source');
+    sourceEl.src = `../content/01/${paddedNum}.mp4`;
+    sourceEl.type = "video/mp4";
+    videoEl.appendChild(sourceEl);
+
+    const player = videojs('lecture-video', {
+      controlBar: {
+        fullscreenToggle: false  // ← 전체화면 버튼 제거
+      }
+    });
+    const VjsButton = videojs.getComponent('Button');
+
+    // ✅ 드롭다운 (목차) 버튼
+    const tocButton = player.controlBar.addChild('button', {
+      name: 'TocButton',
+      text: '목차'
+    });
+    tocButton.addClass('vjs-custom-control');
+    tocButton.el().innerHTML = '📖';
+
+    // 드롭다운 메뉴 요소 생성
+    const dropdown = document.createElement('div');
+    dropdown.className = 'dropdown-menu';
+    for (let i = 1; i <= maxPage; i++) {
+      const item = document.createElement('div');
+      const padded = String(i).padStart(2, '0');
+      const title = config.page_type?.[i]?.title || `${padded}차시`;
+      item.innerText = `${title}`;
+      item.onclick = () => {
+        location.href = `${padded}.html`;
+      };
+      dropdown.appendChild(item);
+    }
+    tocButton.el().appendChild(dropdown);
+
+    // 드롭다운 열기/닫기 토글
+    tocButton.on('click', () => {
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // 외부 클릭 시 드롭다운 닫기
+    document.addEventListener('click', (e) => {
+      if (!tocButton.el().contains(e.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    // ✅ 이전 버튼
+    const prevButton = player.controlBar.addChild('button', {
+      name: 'PrevButton',
+      text: '이전'
+    });
+    prevButton.addClass('vjs-custom-control');
+    prevButton.el().innerHTML = '◀';
+    prevButton.on('click', () => {
+      if (pageNum > 1) {
+        location.href = `${String(pageNum - 1).padStart(2, '0')}.html`;
+      } else {
+        alert("처음 페이지입니다.");
+      }
+    });
+
+    // ✅ 다음 버튼
+    const nextButton = player.controlBar.addChild('button', {
+      name: 'NextButton',
+      text: '다음'
+    });
+    nextButton.addClass('vjs-custom-control');
+    nextButton.el().innerHTML = '▶';
+    nextButton.on('click', () => {
+      if (pageNum < maxPage) {
+        location.href = `${String(pageNum + 1).padStart(2, '0')}.html`;
+      } else {
+        alert("마지막 페이지입니다.");
+      }
+    });
+
+    // ✅ 현재 페이지 표시
+    const pageDisplay = player.controlBar.addChild('component');
+    pageDisplay.addClass('vjs-custom-control');
+    pageDisplay.el().innerText = `${paddedNum}/${String(maxPage).padStart(2, '0')}`;
+
+    // ✅ 버튼 정렬
+    const leftWrapper = document.createElement('div');
+    leftWrapper.style.display = 'flex';
+    leftWrapper.style.alignItems = 'center';
+    // leftWrapper.style.marginLeft = '0px';
+    // leftWrapper.style.marginRight = '0px';
+    leftWrapper.className = 'vjs-custom-control';
+
+    const rightWrapper = document.createElement('div');
+    rightWrapper.style.display = 'flex';
+    rightWrapper.style.alignItems = 'center';
+    // rightWrapper.style.marginLeft = '0px';
+    // rightWrapper.style.marginRight = '0px';
+    rightWrapper.className = 'vjs-custom-control';
+
+    leftWrapper.appendChild(tocButton.el());
+    rightWrapper.appendChild(prevButton.el());
+    rightWrapper.appendChild(pageDisplay.el());
+    rightWrapper.appendChild(nextButton.el());
+
+    player.ready(() => {
+      const controlBar = player.controlBar.el();
+      controlBar.insertBefore(leftWrapper, controlBar.firstChild);
+      controlBar.appendChild(rightWrapper);
+
+      player.volume(0.5);
+    });
+  </script>
+</body>
+</html>
