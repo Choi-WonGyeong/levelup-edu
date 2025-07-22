@@ -3,14 +3,17 @@ content_data = Object.keys(content_data).map(function (e) {
     return content_data[e];
 });
 
+// 여기부터
 var path = document.location.pathname;
 var tmp = path.split("/");
 var currentChapter = tmp[tmp.length - 2];
 var currentPage = tmp[tmp.length - 1].split(".html")[0];
-var totalPage = Object.keys(config.page_type).length;
-var page_info = content_data[parseInt(currentChapter) - 1];
+// 여기까지 현재 URL에서 챕터 및 페이지 번호 추출
 
-window.oncontextmenu = function () {
+var totalPage = Object.keys(config.page_type).length; // 전체 페이지 수 계산
+var page_info = content_data[parseInt(currentChapter) - 1]; // 현재 페이지 정보 설정
+
+window.oncontextmenu = function () { // 마우스 우클릭 방지
     return false;
 };
 
@@ -22,6 +25,7 @@ function numToNDigitStr(num, n) {
     return "0" + numToNDigitStr(num, n - 1);
 }
 
+// 외부 스크립트 동적 로딩
 var JS = document.createElement("script");
 JS.type = "text/javascript";
 JS.charset = "UTF-8";

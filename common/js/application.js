@@ -21,12 +21,12 @@ function closeNav() {
     //player.play();
 }
 
-function goNextPage() {
+function goNextPage() { // 다음 페이지, currentPage, totalPage 값을 기준으로 .html 파일로 전환
     console.log("has_block : " + has_block);
 
     var target = parseInt(currentPage, 10) + 1;
     if (has_block) {
-        $("#modal-require-quiz-process p.comment").html("평가하기의 모든 항목을 확인해주세요.");
+        $("#modal-require-quiz-process p.comment").html("평가하기의 모든 항목을 확인해주세요."); // has_block 변수가 true면 모달 띄움
 
         $("#modal-require-quiz-process").addClass("is-active");
         setTimeout(function () {}, 3000);
@@ -39,7 +39,7 @@ function goNextPage() {
     }
 }
 
-function goPrevPage() {
+function goPrevPage() { // 이전 페이지
     var target = parseInt(currentPage, 10) - 1;
     if (target >= 1) {
         document.location.href = numToNDigitStr(target, 2) + ".html";
@@ -66,7 +66,7 @@ function extraContentInit(element, target) {
     //     .append(element);
 }
 
-function opinionElementInit() {
+function opinionElementInit() { // 의견 입력창, 삭제 예정
     var opinion_element =
         '<div id="opinion"><div class="opinion-wrap columns is-marginless animated fadeIn"><div id="opinion-question-area" class="column"><div class="opinion-question-inner-wrap"><div><br><br><br><br></div><div id="opinion-question-sub-title" class="media animated pulse delay-0_5s"><div class="media-left"> <figure class="image is-24x24"> <img src="../common/images/opinion/opinion_symbol.png"> </figure></div><div class="media-content"><p>sub title here</p></div></div><div id="opinion-question-body" class="exam animated fadeIn delay-0_75s"><p>body here</p></div></div><div class="opinion-question-inner-wrap"><div class="form"><textarea name="input-area" id="input-area" rows="5" placeholder="※의견을 입력하세요."></textarea><div class="actions"> <button id="btn-save" class="btn">저장하기</button> <button id="btn-opinion" class="btn button is-primary is-large modal-button" data-target="modal-opinion"> 전문가 의견보기 </button></div></div></div></div></div></div>';
     extraContentInit(opinion_element, $(".content-wrap"));
@@ -110,7 +110,7 @@ function opinionElementInit() {
     });
 }
 
-function quizElementInit() {
+function quizElementInit() { // 퀴즈 시작 버튼, 결과 출력 템플릿
     //quiz
     var quiz_length = Object.keys(page_info.quiz).length;
     var quiz_element =
@@ -122,7 +122,7 @@ function quizElementInit() {
     extraContentInit(quiz_element, $(".content-wrap"));
 }
 
-function summaryElementInit() {
+function summaryElementInit() { // 학습 요약 화면과 출력용 HTML 템플릿 구성
     //summary
     var summary_element =
         '<div class="summary-wrap"><div class="actions"> <button id="btn-print" class="btn">인쇄하기</button> <button id="btn-download" class="btn">다운로드</button></div><div class="summary-content"></div><ul id="paginate"></ul></div>';
@@ -132,19 +132,19 @@ function summaryElementInit() {
     extraContentInit(summary_print_element, $("main"));
 }
 
-function contentInit() {
+function contentInit() { // 콘텐츠 타입별 초기화
     //set title
     document.title = config.title;
 
     var content_element = "";
-    if (config.page_type[parseInt(currentPage)].content_extension === "mp3") {
+    if (config.page_type[parseInt(currentPage)].content_extension === "mp3") { // 현재 페이지가 mp3일 경우 audio 태그 삽입
         //audio
         //console.log('audio');
         content_element =
             '<audio id="player" class="video-js vjs-has-started" controls preload="auto" autoplay="autoplay" playsinline poster="" ></audio>';
         $(".video-wrap").prepend(content_element);
         options.inactivityTimeout = 0;
-    } else {
+    } else { // 현재 페이지가 mp4일 경우 video 태그 삽입
         //video
         //console.log('video');
         content_element =
@@ -154,7 +154,7 @@ function contentInit() {
 
     var player;
     if (player === undefined) {
-        if (parseInt(currentChapter) === 1 && parseInt(currentPage) === 1 && config.competency_test) {
+        if (parseInt(currentChapter) === 1 && parseInt(currentPage) === 1 && config.competency_test) { // 모달 띄움
             $("#player").attr("autoplay", false);
             $("#modal-competency-test").addClass("is-active");
         }
@@ -174,7 +174,7 @@ function contentInit() {
             });
 
             obj.on("loadedmetadata", function () {
-                if (document.location.hash.split("#time=")[1] !== undefined) {
+                if (document.location.hash.split("#time=")[1] !== undefined) { // 특정 해시값(#time=xx)이 있으면 그 시점으로 이동
                     console.log("ready : " + obj.readyState());
                     obj.currentTime(document.location.hash.split("#time=")[1]);
 
@@ -200,9 +200,9 @@ function contentInit() {
     $(".current-page-str").html(currentPage + "/" + numToNDigitStr(totalPage, 2));
 }
 
-function indexInit() {
+function indexInit() {  // 인덱스 구성
     var index_str = '<ul class="menu-list">';
-    $.each(config.page_type, function (key, value) {
+    $.each(config.page_type, function (key, value) { // 좌측 사이드 메뉴 구성
         var indexActive = parseInt(currentPage) === parseInt(key) ? "is-active" : "";
         var subIndex = "";
         // console.log("key :" + key);
@@ -210,7 +210,7 @@ function indexInit() {
         // console.log("type :" + value.type);
         var href = numToNDigitStr(key, 2) + ".html";
 
-        if (value.type === "study" && page_info.hasOwnProperty("lecture_video") && config.menu_study_sub_index) {
+        if (value.type === "study" && page_info.hasOwnProperty("lecture_video") && config.menu_study_sub_index) { // study 타입이면 arrSubTitle을 서브 인덱스로 포함
             subIndex = '<ul class="sub-index">';
             $.each(page_info.lecture_video.arrSubTitle, function (key, value) {
                 //console.log(href);
@@ -235,7 +235,7 @@ function indexInit() {
     index_str += "</ul>"; //end chapter
 
     // learning resources start
-    if (config.learning_resources) {
+    if (config.learning_resources) { // 학습자료 목록 링크 생성
         index_str += "<p class='menu-label'><h2>학습자료</h2></p>";
         index_str += '<ul class="menu-list">';
         $.each(config.learning_resources_list, function (key, value) {
@@ -250,15 +250,15 @@ function indexInit() {
     $(".menu-content-wrap").html(index_str);
 }
 
-function runningMapInit() {
+function runningMapInit() { // 러닝맵 표시
     // running map
     content_data.forEach(function (element, index) {
         var newChapter = document.createElement("div");
-        var chapterName = document.createTextNode(element.title);
+        var chapterName = document.createTextNode(element.title); // 챕터 제목 목록 표시
         newChapter.appendChild(chapterName);
 
         if (Number(currentChapter) - 1 === index) {
-            newChapter.classList.add("has-text-primary");
+            newChapter.classList.add("has-text-primary"); // 현재 챕터 강조
             //$(".subtitle").html(element);
         }
 
@@ -266,13 +266,15 @@ function runningMapInit() {
     });
 }
 
+// 전체 실행 흐름
 $(function () {
-    contentInit();
+    contentInit(); // 페이지 진입 시 실행되는 초기화 코드
     indexInit();
     runningMapInit();
 
+    // 어떤 type인지에 따라 콘텐츠 로딩 방식 결정 (opinion, quiz, summary, etc.)
     //alert(config.page_type[parseInt(currentPage)].type);
-    if (config.page_type[parseInt(currentPage)].type === "opinion") {
+    if (config.page_type[parseInt(currentPage)].type === "opinion") { 
         opinionElementInit();
     } else if (config.page_type[parseInt(currentPage)].type === "quiz") {
         quizElementInit();
@@ -288,7 +290,7 @@ $(function () {
     }
 
     //competency-test link
-    $("#competency-test").click(function () {
+    $("#competency-test").click(function () { // 역량 진단 검사 버튼(competency-test) 클릭 시 새 창 열기
         //location.href = competency_test_path;
         window.open(
             config.competency_test_path,
@@ -305,6 +307,7 @@ $(function () {
     }
 
     // Modal
+    // 모달 제어 기능 (열기/닫기)
     var rootEl = document.documentElement;
     var $modals = getAll(".modal");
     var $modalButtons = getAll(".modal-button");
@@ -327,13 +330,13 @@ $(function () {
         });
     }
 
-    function openModal(target) {
+    function openModal(target) { // ./modal-button 클릭 시 해당 data-target의 모달 표시, data-target은 opinion에 있는데 삭제 예정이라 코드 수정 예정
         var $target = document.getElementById(target);
         //rootEl.classList.add("is-clipped");
         $target.classList.add("is-active");
     }
 
-    function closeModals() {
+    function closeModals() { // 배경 클릭하거나 닫기 버튼 누르면 모든 모달 닫힘
         //rootEl.classList.remove("is-clipped");
         $modals.forEach(function ($el) {
             $el.classList.remove("is-active");

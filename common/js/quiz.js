@@ -1,9 +1,9 @@
 //var arr_quiz = Object.values(page_info.quiz);
-var arr_quiz = Object.keys(page_info.quiz).map(function (e) {
+var arr_quiz = Object.keys(page_info.quiz).map(function (e) { // 퀴즈 객체를 배열로 변환
     return page_info.quiz[e];
 });
 
-
+// 여기부터
 var answers = [];
 var current_step = 1;
 var try_count = 1;
@@ -12,10 +12,11 @@ var required_add = [false, false, false];
 has_block = false;
 has_add_quiz = false;
 has_reading = false;
+// 여기까지 유저 상태 추적 변수들
 
 var quiz_length = Object.keys(page_info.quiz).length;
 
-function makeQuiz(step) {
+function makeQuiz(step) { // 퀴즈 DOM 구조를 문자열로 생성하여 반환
     var check_html = '<button class="next-btn quiz-buttons animated flipInX delay-1s">다음 문제</button>';
     if (step === quiz_length)
         check_html = '<button class="result-btn quiz-buttons animated flipInX delay-1s">결과 확인</button>';
@@ -64,7 +65,7 @@ function makeQuiz(step) {
     return quiz_html;
 }
 
-function quizInit() {
+function quizInit() { // 퀴즈 상태 초기화
     try_count = 1;
     current_step = 1;
     answers = [];
@@ -87,7 +88,7 @@ function quizInit() {
     has_block = false;
 }
 
-function setResult() {
+function setResult() { // 결과 분석 및 피드백 출력
     var correct_count = 0;
     for (var i = 0; i < quiz_length; i++) {
         if (parseInt(arr_quiz[i].correct) === answers[i]) {
@@ -177,7 +178,7 @@ $(document).ready(function () {
 
     setResult();
 
-    $("#start-quiz").click(function () {
+    $("#start-quiz").click(function () { // 퀴즈 시작 버튼
         $("#intro").addClass("animated slideOutLeft");
         $("#assessment")
             .addClass("animated slideInRight")
