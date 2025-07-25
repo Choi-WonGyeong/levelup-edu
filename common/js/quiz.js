@@ -1,3 +1,5 @@
+// 원래 quiz.js
+
 //var arr_quiz = Object.values(page_info.quiz);
 var arr_quiz = Object.keys(page_info.quiz).map(function (e) { // 퀴즈 객체를 배열로 변환
     return page_info.quiz[e];

@@ -1,0 +1,102 @@
+body {
+  font-family: sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
+
+.video-js {
+  width: 1024px;
+  height: 600px;
+}
+
+#video-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+#education-container {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1024px;
+  height: 570px;
+  padding-bottom: 30px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 16px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.education-page {
+  display: none;
+  text-align: left;
+  padding: 20px 40px;
+}
+
+.education-page.active {
+  display: block;
+}
+
+#education-controls {
+  margin-top: 10px;
+}
+
+.edu-nav-btn {
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.vjs-custom-control {
+  font-size: 14px;
+  color: white;
+  padding: 0 5px;
+  cursor: pointer;
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  min-width: 120px;
+  bottom: 40px;
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  font-size: 13px;
+  padding: 5px 0;
+  border-radius: 4px;
+  z-index: 9999;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.dropdown-menu div {
+  padding: 5px 15px;
+  cursor: pointer;
+}
+
+.dropdown-menu div:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+#pdf-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 100;
+}
+
+#pdf-actions button {
+  margin-left: 5px;
+}
