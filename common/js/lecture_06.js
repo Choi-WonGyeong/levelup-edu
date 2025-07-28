@@ -88,6 +88,16 @@ nextButton.on('click', () => {
     alert("마지막 페이지입니다.");
 });
 
+// PDF 다운로드 버튼
+const downloadButton = player.controlBar.addChild('button', { name: 'DownloadButton' });
+downloadButton.addClass('vjs-custom-control');
+downloadButton.el().innerHTML = '<span title="학습 자료 다운로드">📥</span>';
+const pdfPath = `../document/summary/01.pdf`;
+downloadButton.on('click', () => {
+  window.open(pdfPath, '_blank');
+});
+
+
 const pageDisplay = player.controlBar.addChild('component');
 pageDisplay.addClass('vjs-custom-control');
 pageDisplay.el().innerText = `${paddedNum}/${String(maxPage).padStart(2, '0')}`;
@@ -107,6 +117,7 @@ leftWrapper.appendChild(tocButton.el());
 rightWrapper.appendChild(prevButton.el());
 rightWrapper.appendChild(pageDisplay.el());
 rightWrapper.appendChild(nextButton.el());
+rightWrapper.appendChild(downloadButton.el());
 
 player.ready(() => {
   const controlBar = player.controlBar.el();

@@ -43,3 +43,13 @@ body {
 .dropdown-menu div:hover {
   background: rgba(0, 0, 0, 0.2);
 }
+
+.download-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

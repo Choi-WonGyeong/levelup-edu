@@ -75,6 +75,18 @@ nextButton.on('click', () => {
   }
 });
 
+// PDF 다운로드 버튼, 툴팁은 추후에 css 추가 후 수정 예정
+const downloadButton = player.controlBar.addChild('button', { name: 'DownloadButton' });
+downloadButton.addClass('vjs-custom-control');
+downloadButton.el().innerHTML = '<span title="학습 자료 다운로드">📥</span>';
+downloadButton.el().classList.add('download-btn');
+
+const pdfPath = `../document/summary/01.pdf`; // pdf 여기서 바꾸면 됨
+downloadButton.on('click', () => {
+  window.open(pdfPath, '_blank');
+});
+
+
 // 현재 페이지 표시
 const pageDisplay = player.controlBar.addChild('component');
 pageDisplay.addClass('vjs-custom-control');
@@ -95,6 +107,7 @@ leftWrapper.appendChild(tocButton.el());
 rightWrapper.appendChild(prevButton.el());
 rightWrapper.appendChild(pageDisplay.el());
 rightWrapper.appendChild(nextButton.el());
+rightWrapper.appendChild(downloadButton.el());
 
 player.ready(() => {
   const controlBar = player.controlBar.el();
@@ -102,98 +115,3 @@ player.ready(() => {
   controlBar.appendChild(rightWrapper);
   player.volume(0.5);
 });
-
-
-// 공통: 페이지 번호, 최대 페이지 등 공통 변수 설정
-// const currentFile = location.pathname.split('/').pop();
-// const pageNum = parseInt(currentFile.split('.')[0]);
-// const paddedNum = String(pageNum).padStart(2, '0');
-// const maxPage = 7;
-
-// // 비디오 엘리먼트, video.js 플레이어 생성
-// const videoEl = document.getElementById('lecture-video');
-// const player = videojs('lecture-video');
-
-// // 컨트롤바 커스텀 버튼 생성 함수
-// function createCustomControls() {
-//   // TOC 버튼
-//   const tocButton = player.controlBar.addChild('button', { name: 'TocButton' });
-//   tocButton.addClass('vjs-custom-control');
-//   tocButton.el().innerHTML = '📖';
-
-//   const dropdown = document.createElement('div');
-//   dropdown.className = 'dropdown-menu';
-
-//   for (let i = 1; i <= maxPage; i++) {
-//     const padded = String(i).padStart(2, '0');
-//     const item = document.createElement('div');
-//     item.innerText = `${padded}차시`;
-//     item.onclick = () => location.href = `${padded}.html`;
-//     dropdown.appendChild(item);
-//   }
-
-//   tocButton.el().appendChild(dropdown);
-
-//   tocButton.on('click', () => {
-//     dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-//   });
-
-//   document.addEventListener('click', e => {
-//     if (!tocButton.el().contains(e.target)) dropdown.style.display = 'none';
-//   });
-
-//   // 이전 버튼
-//   const prevButton = player.controlBar.addChild('button', { name: 'PrevButton' });
-//   prevButton.addClass('vjs-custom-control');
-//   prevButton.el().innerHTML = '◀';
-//   prevButton.on('click', () => {
-//     if (pageNum > 1)
-//       location.href = `${String(pageNum - 1).padStart(2, '0')}.html`;
-//     else
-//       alert("처음 페이지입니다.");
-//   });
-
-//   // 다음 버튼
-//   const nextButton = player.controlBar.addChild('button', { name: 'NextButton' });
-//   nextButton.addClass('vjs-custom-control');
-//   nextButton.el().innerHTML = '▶';
-//   nextButton.on('click', () => {
-//     if (pageNum < maxPage)
-//       location.href = `${String(pageNum + 1).padStart(2, '0')}.html`;
-//     else
-//       alert("마지막 페이지입니다.");
-//   });
-
-//   // 페이지 표시
-//   const pageDisplay = player.controlBar.addChild('component');
-//   pageDisplay.addClass('vjs-custom-control');
-//   pageDisplay.el().innerText = `${paddedNum}/${String(maxPage).padStart(2, '0')}`;
-
-//   // 버튼 그룹 레이아웃 조정
-//   const leftWrapper = document.createElement('div');
-//   leftWrapper.style.display = 'flex';
-//   leftWrapper.style.alignItems = 'center';
-//   leftWrapper.className = 'vjs-custom-control';
-
-//   const rightWrapper = document.createElement('div');
-//   rightWrapper.style.display = 'flex';
-//   rightWrapper.style.alignItems = 'center';
-//   rightWrapper.style.marginLeft = 'auto';
-//   rightWrapper.className = 'vjs-custom-control';
-
-//   leftWrapper.appendChild(tocButton.el());
-//   rightWrapper.appendChild(prevButton.el());
-//   rightWrapper.appendChild(pageDisplay.el());
-//   rightWrapper.appendChild(nextButton.el());
-
-//   player.ready(() => {
-//     const controlBar = player.controlBar.el();
-//     controlBar.insertBefore(leftWrapper, controlBar.firstChild);
-//     controlBar.appendChild(rightWrapper);
-
-//     player.volume(0.5);
-//   });
-// }
-
-// // 초기화
-// createCustomControls();
