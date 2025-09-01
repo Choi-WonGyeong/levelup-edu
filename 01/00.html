@@ -143,9 +143,9 @@
       position: absolute;
       top: 15px;
       right: 20px;
-      font-size: 28px;
+      font-size: 15px;
       background: none;
-      border: none;
+      border: 2px solid rgb(0, 0, 0);
       cursor: pointer;
       color: black;
     }
@@ -154,9 +154,9 @@
       position: absolute;
       top: 15px;
       right: 20px;
-      font-size: 28px;
+      font-size: 15px;
       background: none;
-      border: none;
+      border: 2px solid rgb(0, 0, 0);
       cursor: pointer;
       color: black;
     }
@@ -168,7 +168,7 @@
 
     <!-- 시작 화면 -->
     <div id="start-screen" class="visible">
-      <button class="close-btn" onclick="goToExit()">×</button>
+      <button class="close-btn" onclick="goToExit()">나가기</button>
       <button class="start-btn" onclick="startSurvey()">역량진단 바로가기</button>
     </div>
 
@@ -348,7 +348,7 @@
 
       const resultDiv = document.getElementById("result");
       resultDiv.innerHTML = `
-        <button class="result-close-btn" onclick="goToExit()">×</button>
+        <button class="result-close-btn" onclick="goToExit()">나가기</button>
         <div style="margin-top: 20px;">
           <h2>직무역량진단 결과</h2>
           <p>당신의 역량은 <strong>${level}</strong> 입니다. (평균: ${avg.toFixed(2)}점)</p>
