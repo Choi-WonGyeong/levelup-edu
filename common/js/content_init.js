@@ -1,29 +1,61 @@
-//content_data = Object.values(content_data);
-content_data = Object.keys(content_data).map(function (e) {
-    return content_data[e];
-});
+/*
+content_init.js j20250907
+*/
+(() => {
+    'use strict';
 
-var path = document.location.pathname;
-var tmp = path.split("/");
-var currentChapter = tmp[tmp.length - 2];
-var currentPage = tmp[tmp.length - 1].split(".html")[0];
-var totalPage = Object.keys(config.page_type).length;
-var page_info = content_data[parseInt(currentChapter) - 1];
 
-window.oncontextmenu = function () {
-    return false;
-};
+    const qs = (sel, root = document) => root.querySelector(sel);
+    const to2 = (n) => String(n).padStart(2, '0');
 
-//move page function
-function numToNDigitStr(num, n) {
-    if (num >= Math.pow(10, n - 1)) {
-        return num;
+
+    function getPathInfo() {
+        const parts = location.pathname.split('/').filter(Boolean);
+        const file = parts[parts.length - 1] || '01.html';
+        const chapter = parts[parts.length - 2] || '01';
+        const page = (file.split('.html')[0] || '01');
+        return { chapter, page };
     }
-    return "0" + numToNDigitStr(num, n - 1);
-}
 
-var JS = document.createElement("script");
-JS.type = "text/javascript";
-JS.charset = "UTF-8";
-JS.src = "https://www.levelup-edu.kr/common/js/content_tracking.js";
-document.getElementsByTagName('head')[0].appendChild(JS);
+
+    function toArrayLike(objOrArray) {
+        if (Array.isArray(objOrArray)) return objOrArray;
+        if (objOrArray && typeof objOrArray === 'object') {
+            return Object.keys(objOrArray).sort((a, b) => +a - +b).map(k => objOrArray[k]);
+        }
+        return [];
+    }
+
+
+    function boot() {
+        const { chapter, page } = getPathInfo();
+        const cfg = window.config || {};
+        const data = toArrayLike(window.content_data);
+        const chIndex = Math.max(0, parseInt(chapter, 10) - 1);
+        const pageInfo = data[chIndex] || {};
+
+
+        const totalPage = Object.keys(cfg.page_type || {}).length || 1;
+
+
+        // Expose minimal info for other modules (e.g., application.js)
+        window.Page = {
+            chapter, page, totalPage, pageInfo,
+            to2,
+            goPrev() { const p = Math.max(1, parseInt(page, 10) - 1); location.href = `${to2(p)}.html`; },
+            goNext() { const p = Math.min(totalPage, parseInt(page, 10) + 1); location.href = `${to2(p)}.html`; },
+        };
+
+
+        // Title update if element present
+        const titleEl = qs('#lecture-title');
+        if (titleEl) titleEl.textContent = `${parseInt(chapter, 10)}차시 강의`;
+    }
+
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
+    }
+})();

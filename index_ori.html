@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title></title>
+	<link rel="stylesheet" href="common/lib/bulma-0.8.0/bulma.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="data/config.js"></script>
+	<script src="data/data.js"></script>
+	<script>
+		function numToNDigitStr(num, n) {
+			if (num >= Math.pow(10, n - 1)) {
+				return num;
+			}
+			return "0" + numToNDigitStr(num, n - 1);
+		}
+
+		$(function () {
+			// title setting
+			document.title = config.title;
+			$(".title").html(config.title);
+
+			//console.log(content_data);
+			$.each(content_data, function (index, obj) {
+				//
+				// var chapter = document.createElement("li");
+				// chapter.setAttribute("data-link", numToNDigitStr(parseInt(index), 2));
+				// chapter.setAttribute("class", "media");
+
+				// var chapter_title = document.createTextNode(obj.title);
+				// chapter.appendChild(chapter_title);
+				var media_left = '<figure class="media-left"><h2>' + parseInt(index) + '</h2></figure>';
+				var media_content = '<div class="media-content"><div class="content">' + obj.title + '</div></div>';
+				var chapter = '<li class="media" data-link="' + numToNDigitStr(parseInt(index), 2) + '">' + media_left + media_content + '</li>';
+				$(".chapter-list").append(chapter);
+			});
+			$(".chapter-list li").click(function () {
+				var link = $(this).data("link") + "/01.html";
+				// console.log(link);
+				window.open(link, "_blank", "width=1010 , height=645, scrolling=no, left=0, top=0, frameborder=0, resizable=no");
+			});
+		});
+
+	</script>
+	<style>
+		.chapter-list-wrap {
+			padding: 2em;
+		}
+
+		.chapter-list {
+			/* list-style: none; */
+		}
+
+		.chapter-list li {
+			margin: 0.5em 1em;
+			cursor: pointer;
+			/* color: blue; */
+		}
+
+		.chapter-list li:hover {
+			font-weight: bold;
+			color: #6a6aff;
+		}
+	</style>
+</head>
+
+<body>
+	<section class="hero is-dark">
+		<div class="hero-body">
+			<div class="container">
+				<h1 class="title">
+				</h1>
+			</div>
+		</div>
+	</section>
+	<div class="container is-fullhd chapter-list-wrap">
+		<ol class="chapter-list box">
+		</ol>
+	</div>
+</body>
+
+</html>

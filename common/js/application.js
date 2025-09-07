@@ -1,342 +1,226 @@
-//application js
+/*
+  application.js J20250907
+*/
 
-var has_block = false;
+(() => {
+  'use strict';
 
-var overlay_contnet, title, subtitle;
-title = '<h5 class="title is-5">' + page_info.title + "</h5>";
-subtitle = '<h6 class="subtitle is-6">' + config.page_type[parseInt(currentPage)].title + "</h6>";
-overlay_contnet =
-    '<div class="vjs-overlay vjs-overlay-top-left vjs-overlay-background"><div class="column">' +
-    subtitle +
-    "</div></div>";
+  // =============================
+  // Utilities
+  // =============================
+  const qs = (sel, root = document) => root.querySelector(sel);
+  const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const to2 = (n) => String(n).padStart(2, '0');
 
-function closeNav() {
-    //document.getElementById("side-menu").style.width = "0";
-    $("#side-menu").css("width", "0");
-    setTimeout(function () {
-        $("#side-menu").css("overflow-y", "hidden");
-    }, 400);
+  const getPathInfo = () => {
+    const parts = location.pathname.split('/').filter(Boolean);
+    const pageFile = parts[parts.length - 1] || '01.html';
+    const chapter = parts[parts.length - 2] || '01';
+    const page = (pageFile.split('.html')[0] || '01');
+    return { chapter, page };
+  };
 
-    $(".video-dim").hide();
-    //player.play();
-}
+  // =============================
+  // State
+  // =============================
+  const state = {   //상태 관리. 현재 차시 번호, 페이지 번호, video.js 플레이어 인스턴스, 페이지 데이터 저장.
+    chapter: '01',
+    page: '01',
+    player: /** @type {import('video.js').VideoJsPlayer|null} */ (null),
+    pageInfo: null,
+  };
 
-function goNextPage() {
-    console.log("has_block : " + has_block);
+  // =============================
+  // Content URL resolver   
+  // =============================
+  function resolveContentUrl(cfg, data, chapter, page) {    //콘텐츠 URL 계산. <video> 또는 <audio> 태그 동적 삽입. 없으면 기본 규칙: {content_path}/{chapter}/{page}.{ext}
+    // You can tailor this to your actual data schema.
+    // Typical: cfg.content_path + data[chapterIndex].lecture_video.srcs[pageIndex]
+    const chIndex = parseInt(chapter, 10) - 1;
+    const pgIndex = parseInt(page, 10) - 1;
+    const ch = Array.isArray(data) ? data[chIndex] : (data && data[chapter]);
 
-    var target = parseInt(currentPage, 10) + 1;
-    if (has_block) {
-        $("#modal-require-quiz-process p.comment").html("평가하기의 모든 항목을 확인해주세요.");
-
-        $("#modal-require-quiz-process").addClass("is-active");
-        setTimeout(function () {}, 3000);
-    } else {
-        if (target <= totalPage) {
-            document.location.href = numToNDigitStr(target, 2) + ".html";
-        } else {
-            alert("마지막 페이지 입니다.");
-        }
+    // Fallback: {content_path}/{chapter}/{page}.{ext}
+    const ext = (cfg?.page_type && cfg.page_type[parseInt(page, 10)]?.content_extension) || 'mp4';
+    if (ch && ch.lecture_video && Array.isArray(ch.lecture_video.srcs)) {
+      const src = ch.lecture_video.srcs[pgIndex];
+      if (src) return src; // allow absolute/relative direct use
     }
-}
+    return `${cfg?.content_path ?? '../content/'}${chapter}/${page}.${ext}`;
+  }
 
-function goPrevPage() {
-    var target = parseInt(currentPage, 10) - 1;
-    if (target >= 1) {
-        document.location.href = numToNDigitStr(target, 2) + ".html";
-    } else {
-        alert("첫 페이지 입니다.");
+  // =============================
+  // DOM building
+  // =============================
+  function ensureMediaElement({ isAudio }) {
+    let el = qs('#player');
+    if (el) return el;
+
+    const tag = isAudio ? 'audio' : 'video';
+    el = document.createElement(tag);
+    el.id = 'player';
+    el.className = 'video-js vjs-default-skin';
+    el.setAttribute('controls', '');
+    el.setAttribute('preload', 'auto');
+    // Policy-friendly defaults: allow autoplay but start muted; user can unmute via UI. j20250907 delete muted
+    el.setAttribute('autoplay', '');
+    el.setAttribute('playsinline', '');
+    // el.setAttribute('muted', '');
+
+    // Container: create if missing
+    let wrap = qs('.video-wrap');
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.className = 'video-wrap';
+      document.body.prepend(wrap);
     }
-}
+    wrap.prepend(el);
+    return el;
+  }
 
-function contentUrl() {
-    var content_path, content_name, content_extension;
-    content_path = config.content_path + currentChapter;
-    content_name = currentPage;
-    content_extension = config.page_type[parseInt(currentPage)].content_extension;
+  // =============================
+  // Player init & events
+  // =============================
+  function initPlayer() {   //video.js 플레이어 생성. 생성 시 bindUnmuteOnFirstGesture, applyHashStartTime 연결.
+    const isAudio = (config?.page_type && (config.page_type[parseInt(state.page, 10)]?.content_extension === 'mp3'));
+    const el = ensureMediaElement({ isAudio });
 
-    return content_path + "/" + content_name + "." + content_extension;
-}
+    const options = {
+      controls: true,
+      preload: 'auto',
+      autoplay: true,      // actual audio autoplay depends on policy; we start muted.
+      muted: true,
+      playsinline: true,
+      controlBar: {
+        volumePanel: { inline: false, vertical: true },
+      },
+      playbackRates: ['0.5', '1.0', '1.5', '2.0'],
+      inactivityTimeout: 3000,
+    };
 
-function extraContentInit(element, target) {
-    //console.log("extraContentInit");
-
-    $(target).show().append(element);
-    // $(".content-wrap")opinion-pic
-    //     .show()
-    //     .append(element);
-}
-
-function opinionElementInit() {
-    var opinion_element =
-        '<div id="opinion"><div class="opinion-wrap columns is-marginless animated fadeIn"><div id="opinion-question-area" class="column"><div class="opinion-question-inner-wrap"><div><br><br><br><br></div><div id="opinion-question-sub-title" class="media animated pulse delay-0_5s"><div class="media-left"> <figure class="image is-24x24"> <img src="../common/images/opinion/opinion_symbol.png"> </figure></div><div class="media-content"><p>sub title here</p></div></div><div id="opinion-question-body" class="exam animated fadeIn delay-0_75s"><p>body here</p></div></div><div class="opinion-question-inner-wrap"><div class="form"><textarea name="input-area" id="input-area" rows="5" placeholder="※의견을 입력하세요."></textarea><div class="actions"> <button id="btn-save" class="btn">저장하기</button> <button id="btn-opinion" class="btn button is-primary is-large modal-button" data-target="modal-opinion"> 전문가 의견보기 </button></div></div></div></div></div></div>';
-    extraContentInit(opinion_element, $(".content-wrap"));
-    $("#opinion-question-title .media-content").html(page_info.opinion.title);
-    $("#opinion-question-sub-title .media-content").html(page_info.opinion.sub_title);
-    $("#opinion-question-body").html(page_info.opinion.body);
-
-    if (page_info.opinion.modal_content) {
-        $("#opinion-modal-content").html(page_info.opinion.modal_content);
-    } else {
-        $("#btn-opinion").hide();
-        $("#opinion-modal-content").hide();
-    }
-
-    var opinion_name = "opinion_" + encodeURIComponent(page_info.title) + "_" + currentChapter;
-    if (Cookies.get(opinion_name)) {
-        $("#opinion-question-area #input-area").val(decodeURIComponent(Cookies.get(opinion_name)));
-    }
-
-    $("button#btn-save").click(function () {
-        if ($("#input-area").val().length > 0) {
-            Cookies.set(opinion_name, encodeURIComponent($("#input-area").val()), {
-                expires: config.cookie_expire
-            }); // 쿠키저장
-            //console.log(encodeURIComponent($("#input-area").val()));
-
-            $("#modal-opinion-alert p.comment").html("저장 되었습니다.");
-            $("#modal-opinion-alert").addClass("is-active");
-            setTimeout(function () {
-                $("#modal-opinion-alert").removeClass("is-active");
-                clearTimeout(this);
-            }, 3000);
-        } else {
-            $("#modal-opinion-alert p.comment").html("내용을<br/>입력해주세요.");
-            $("#modal-opinion-alert").addClass("is-active");
-            setTimeout(function () {
-                $("#modal-opinion-alert").removeClass("is-active");
-                clearTimeout(this);
-            }, 3000);
-        }
+    options.controlBar = Object.assign({}, options.controlBar, {       //전체화면 버튼 제거
+        fullscreenToggle: false
     });
-}
 
-function quizElementInit() {
-    //quiz
-    var quiz_length = Object.keys(page_info.quiz).length;
-    var quiz_element =
-        '<div id="quiz" class="container is-fullhd"><div id="intro" class="columns is-marginless"><div class="quiz-intro-right intro-wrap animated fadeInRight column"> <section class="intro-section"><h2 class="intro-title">' 
-		+
-        '<div><br><br><br><br><br><br><br><br><br><br><br></div><button id="start-quiz">start</button> </section></div></div><div id="assessment" class=""></div><div id="result" class=""><div class="result-title"><img src="../common/images/quiz/resulttitle.png" alt=""></div><div class="result-message"><p>총 ' +
-        quiz_length +
-        '문항 중 <span class="result-count"></span>문항을 맞히셨습니다.</p></div><div class="result-feedback"><p class="feedback-message feed-success">효과적인 학습을 하셨네요!</p><p class="feedback-message feed-failed">아쉽게 틀린 문항이 있으시네요.</p></div><div class="result-table"></div><div class="actions has-text-centered"><button id="retry">다시풀기</button></div></div></div>';
-    extraContentInit(quiz_element, $(".content-wrap"));
-}
-
-function summaryElementInit() {
-    //summary
-    var summary_element =
-        '<div class="summary-wrap"><div class="actions"> <button id="btn-print" class="btn">인쇄하기</button> <button id="btn-download" class="btn">다운로드</button></div><div class="summary-content"></div><ul id="paginate"></ul></div>';
-    var summary_print_element =
-        '<section class="print-area"><h1 class="print title"></h1><h2 class="print subtitle"></h2></section>';
-    extraContentInit(summary_element, $(".content-wrap"));
-    extraContentInit(summary_print_element, $("main"));
-}
-
-function contentInit() {
-    //set title
-    document.title = config.title;
-
-    var content_element = "";
-    if (config.page_type[parseInt(currentPage)].content_extension === "mp3") {
-        //audio
-        //console.log('audio');
-        content_element =
-            '<audio id="player" class="video-js vjs-has-started" controls preload="auto" autoplay="autoplay" playsinline poster="" ></audio>';
-        $(".video-wrap").prepend(content_element);
-        options.inactivityTimeout = 0;
+    if (!state.player) {
+      state.player = window.videojs?.('player', options, function onReady() {
+        const player = this;
+        // Unmute hint: allow user gesture to enable sound
+        bindUnmuteOnFirstGesture(player);
+        applyHashStartTime(player);
+      });
     } else {
-        //video
-        //console.log('video');
-        content_element =
-            '<video id="player" class="video-js vjs-has-started" controls preload="auto" autoplay="autoplay" playsinline poster="" ></video>';
-        $(".video-wrap").prepend(content_element);
+      state.player.autoplay(true);
+      state.player.muted(true);
     }
+  }
 
-    var player;
-    if (player === undefined) {
-        if (parseInt(currentChapter) === 1 && parseInt(currentPage) === 1 && config.competency_test) {
-            $("#player").attr("autoplay", false);
-            $("#modal-competency-test").addClass("is-active");
-        }
-        videojs("player", options, function () {
-            var obj = this;
-            obj.src({
-                //src: "./mov/" + currentPage + ".mp4"
-                src: contentUrl(),
-            });
-            $("#player").append(overlay_contnet);
+  function bindUnmuteOnFirstGesture(player) {   //첫 사용자 클릭/키 입력 이벤트 발생 시 → player.muted(false)로 자동 해제.
+    const handler = () => {
+      // After first explicit user gesture in the document, we can allow sound.
+      try { player.muted(false); } catch (_) {}
+      document.removeEventListener('pointerdown', handler, true);
+      document.removeEventListener('keydown', handler, true);
+    };
+    document.addEventListener('pointerdown', handler, true);
+    document.addEventListener('keydown', handler, true);
+  }
 
-            obj.on("play", function () {
-                $(".vjs-overlay").hide();
-            });
-            obj.on("pause", function () {
-                $(".vjs-overlay").show();
-            });
+  function applyHashStartTime(player) {     //URL #time=123 있으면 → 해당 시간부터 재생.
+    const seekFromHash = () => {
+      const m = location.hash.match(/#time=(\d+(?:\.\d+)?)/);
+      if (!m) return;
+      const t = parseFloat(m[1]);
+      if (!Number.isNaN(t)) {
+        try { player.currentTime(t); } catch (_) {}
+      }
+    };
+    seekFromHash();
+    window.addEventListener('hashchange', seekFromHash);
+  }
 
-            obj.on("loadedmetadata", function () {
-                if (document.location.hash.split("#time=")[1] !== undefined) {
-                    console.log("ready : " + obj.readyState());
-                    obj.currentTime(document.location.hash.split("#time=")[1]);
+  // =============================
+  // Load & play content
+  // =============================
+  function loadContent() {
+    const src = resolveContentUrl(config, content_data, state.chapter, state.page);
+    if (!state.player) initPlayer();
+    state.player.src({ src });
+    state.player.load();
+    // If MEI/gesture allows, this will play; otherwise stays paused until user interacts.
+    try { state.player.play(); } catch (_) {}
+  }
 
-                    //sile menu hide;
-                }
-            });
+  // =============================
+  // Navigation
+  // =============================
+  function goTo(chapter, page) {
+    location.href = `${chapter}/${page}.html`;
+  }
 
-            window.addEventListener("hashchange", function () {
-                if (document.location.hash.split("#time=")[1] !== undefined) {
-                    obj.currentTime(document.location.hash.split("#time=")[1]);
-                    //sile menu hide;
-                }
-            });
-        });
-    } else {
-        player.src({
-            src: contentUrl(),
-        });
-        player.load();
+  function goNextPage() {
+    const total = Object.keys(config?.page_type || {}).length || 1;
+    const next = Math.min(parseInt(state.page, 10) + 1, total);
+    if (next === parseInt(state.page, 10)) return; // last page
+    location.href = `${to2(next)}.html`;
+  }
+
+  function goPrevPage() {
+    const prev = Math.max(parseInt(state.page, 10) - 1, 1);
+    if (prev === parseInt(state.page, 10)) return; // first page
+    location.href = `${to2(prev)}.html`;
+  }
+
+  // Expose minimal API (optional)
+  window.App = {        //전역 API. 외부에서 JS 호출로도 제어 가능.
+    goNextPage,
+    goPrevPage,
+    goTo,
+    reload: () => location.reload(),
+  };
+
+  // =============================
+  // Boot
+  // =============================
+  /*
+    URL 파싱해서 state.chapter/page 결정.
+    initPlayer() → loadContent() 실행.
+    버튼(#prevBtn, #nextBtn)에 이벤트 바인딩.
+    제목(lecture-title) 업데이트.
+  */
+  function boot() {
+    const { chapter, page } = getPathInfo();
+    state.chapter = chapter;
+    state.page = page;
+
+    // Map content_data to array if needed (compat with object form {"1": {...}})
+    if (!Array.isArray(content_data)) {
+      try { window.content_data = Object.keys(content_data).map(k => content_data[k]); } catch (_) {}
     }
+    const chIdx = parseInt(state.chapter, 10) - 1;
+    state.pageInfo = (Array.isArray(content_data) ? content_data[chIdx] : null) || {};
 
-    //contnet page number set
-    $(".current-page-str").html(currentPage + "/" + numToNDigitStr(totalPage, 2));
-}
+    initPlayer();
+    loadContent();
+    wireBasicUI();
+  }
 
-function indexInit() {
-    var index_str = '<ul class="menu-list">';
-    $.each(config.page_type, function (key, value) {
-        var indexActive = parseInt(currentPage) === parseInt(key) ? "is-active" : "";
-        var subIndex = "";
-        // console.log("key :" + key);
-        // console.log("title :" + value.title);
-        // console.log("type :" + value.type);
-        var href = numToNDigitStr(key, 2) + ".html";
+  function wireBasicUI() {
+    // Optional: connect custom buttons if present in the DOM
+    const prevBtn = qs('#prevBtn');
+    const nextBtn = qs('#nextBtn');
+    if (prevBtn) prevBtn.addEventListener('click', goPrevPage);
+    if (nextBtn) nextBtn.addEventListener('click', goNextPage);
 
-        if (value.type === "study" && page_info.hasOwnProperty("lecture_video") && config.menu_study_sub_index) {
-            subIndex = '<ul class="sub-index">';
-            $.each(page_info.lecture_video.arrSubTitle, function (key, value) {
-                //console.log(href);
-                // console.log("arrSubTitle : " + page_info.lecture_video.arrSubTitle[key]);
-                // console.log("arrHashTime : " + page_info.lecture_video.arrHashTime[key]);
+    // Title update (example)
+    const h = qs('#lecture-title');
+    if (h) h.textContent = `${parseInt(state.chapter, 10)}차시 강의`;
+  }
 
-                //arrHashTime
-                subIndex +=
-                    '<li><a href="' +
-                    href +
-                    "#time=" +
-                    page_info.lecture_video.arrHashTime[key] +
-                    '">' +
-                    page_info.lecture_video.arrSubTitle[key] +
-                    "</a></li>";
-            });
-            subIndex += "</ul>";
-        }
-        index_str +=
-            '<li><a class="' + indexActive + '" href="' + href + '">' + value.title + "</a>" + subIndex + "</li>";
-    });
-    index_str += "</ul>"; //end chapter
-
-    // learning resources start
-    if (config.learning_resources) {
-        index_str += "<p class='menu-label'><h2>학습자료</h2></p>";
-        index_str += '<ul class="menu-list">';
-        $.each(config.learning_resources_list, function (key, value) {
-            var title = value.title;
-            var link = config.learning_resources_path + value.file_name;
-
-            index_str += "<li><a href='" + link + "' target='_blank'>" + title + "</a></li>";
-        });
-        index_str += "</ul>";
-    }
-
-    $(".menu-content-wrap").html(index_str);
-}
-
-function runningMapInit() {
-    // running map
-    content_data.forEach(function (element, index) {
-        var newChapter = document.createElement("div");
-        var chapterName = document.createTextNode(element.title);
-        newChapter.appendChild(chapterName);
-
-        if (Number(currentChapter) - 1 === index) {
-            newChapter.classList.add("has-text-primary");
-            //$(".subtitle").html(element);
-        }
-
-        $("#map-chapter-list").append(newChapter);
-    });
-}
-
-$(function () {
-    contentInit();
-    indexInit();
-    runningMapInit();
-
-    //alert(config.page_type[parseInt(currentPage)].type);
-    if (config.page_type[parseInt(currentPage)].type === "opinion") {
-        opinionElementInit();
-    } else if (config.page_type[parseInt(currentPage)].type === "quiz") {
-        quizElementInit();
-    } else if (config.page_type[parseInt(currentPage)].type === "summary") {
-        summaryElementInit();
-    } else {
-        $(".content-wrap").empty();
-        $(".content-wrap").hide();
-    }
-
-    if (!config.competency_test) {
-        $("#index-btn-competency-test").hide();
-    }
-
-    //competency-test link
-    $("#competency-test").click(function () {
-        //location.href = competency_test_path;
-        window.open(
-            config.competency_test_path,
-            "_blank",
-            "toolbar=no,scrollbars=yes,resizable=yes,width=1024,height=700"
-        );
-    });
-    /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
-    $(".video-dim").click(closeNav);
-
-    // Functions
-    function getAll(selector) {
-        return Array.prototype.slice.call(document.querySelectorAll(selector), 0);
-    }
-
-    // Modal
-    var rootEl = document.documentElement;
-    var $modals = getAll(".modal");
-    var $modalButtons = getAll(".modal-button");
-    var $modalCloses = getAll(".modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button");
-
-    if ($modalButtons.length > 0) {
-        $modalButtons.forEach(function ($el) {
-            $el.addEventListener("click", function () {
-                var target = $el.dataset.target;
-                openModal(target);
-            });
-        });
-    }
-
-    if ($modalCloses.length > 0) {
-        $modalCloses.forEach(function ($el) {
-            $el.addEventListener("click", function () {
-                closeModals();
-            });
-        });
-    }
-
-    function openModal(target) {
-        var $target = document.getElementById(target);
-        //rootEl.classList.add("is-clipped");
-        $target.classList.add("is-active");
-    }
-
-    function closeModals() {
-        //rootEl.classList.remove("is-clipped");
-        $modals.forEach(function ($el) {
-            $el.classList.remove("is-active");
-        });
-    }
-});
+  // Start
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
