@@ -37,14 +37,21 @@ function answer(userAnswer) {
 
   const feedbackEl = document.getElementById('quiz-feedback');
   const correctAnswer = quizData[currentQuiz].answer;
-  const numberStr = `${currentQuiz + 1}번째 문제입니다.`;
+
+  // 기존 O/X 버튼 숨기기
+  document.getElementById('btnO').style.display = 'none';
+  document.getElementById('btnX').style.display = 'none';
+
+  // 정답 overlay 보여주기
+  const overlay = document.getElementById('correct-overlay');
+  overlay.style.display = 'block';
 
   if (userAnswer === correctAnswer) {
     feedbackEl.innerText = `정답입니다! ✅`;
     feedbackEl.style.color = "lightgreen";
     correctCount++;
   } else {
-    feedbackEl.innerText = `틀렸습니다! ❌ 정답: ${correctAnswer}`;;
+    feedbackEl.innerText = `틀렸습니다! ❌`;
     feedbackEl.style.color = "red";
   }
 
@@ -53,9 +60,17 @@ function answer(userAnswer) {
   setTimeout(() => {
     answered = false;
     currentQuiz++;
+
+    // overlay 숨기고 버튼 다시 보이기
+    overlay.style.display = 'none';
+    document.getElementById('btnO').style.display = 'inline-block';
+    document.getElementById('btnX').style.display = 'inline-block';
+
     loadQuiz();
-  }, 1500);
+  }, 15000); // 시간 수정 원래 1500
 }
+
+
 
 window.retryQuiz = function () {
   currentQuiz = 0;

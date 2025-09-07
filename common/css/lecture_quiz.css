@@ -111,6 +111,37 @@ body {
   font-size: 18px;
   margin-top: 20px;
 }
+
+#correct-overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 20;
+  pointer-events: none;
+}
+
+#correct-overlay img {
+  position: absolute;
+  width: 500px;
+  height: auto;
+  bottom: 3%; 
+  transform-origin: bottom center;
+}
+
+#correct-o {
+  left: 50%; 
+  transform: translateX(-50%) translateX(-250px);
+}
+
+#correct-x {
+  left: 50%;
+  transform: translateX(-50%) translateX(250px);
+}
+
 .vjs-custom-control {
   font-size: 14px;
   color: white;
