@@ -7,21 +7,28 @@
   <link href="../common/css/lecture_quiz.css" rel="stylesheet" />
 </head>
 <body>
-  <div id="video-wrapper">
+  <div id="app-wrapper">
+  <!-- <div id="video-wrapper">
     <video id="lecture-video"
            class="video-js vjs-default-skin"
            controls
            preload="auto"
-           poster="../common/test_images/background.jpg"></video>
+           poster="../common/test_images/background.jpg">
+    </video> -->
+    <div id="start-screen">
+      <img src="../common/images/quiz/startscreen.png" class="start-bg" />
+      <img src="../common/images/quiz/start.png" class="start-btn" onclick="startQuiz()" />
+    </div>
 
     <div id="quiz-container">
       <div class="quiz-question" id="quiz-question"></div>
       <div class="quiz-buttons">
-        <button onclick="answer('O')">O</button>
-        <button onclick="answer('X')">X</button>
+        <button id="btnO"><img src="../common/images/quiz/o.png" alt="O" class="quiz-btn-img"></button>
+        <button id="btnX"><img src="../common/images/quiz/x.png" alt="X" class="quiz-btn-img"></button>
       </div>
-      <div id="quiz-feedback" style="display:none;"></div>
+      <div id="quiz-feedback"></div>
     </div>
+
   </div>
 
   <script src="../common/lib/video-js/video.min.js"></script>
