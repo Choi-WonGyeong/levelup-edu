@@ -171,3 +171,61 @@ body {
 .dropdown-menu div:hover {
   background: rgba(0, 0, 0, 0.2);
 }
+
+/* 결과 화면 */
+#quiz-result {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1024px;
+  height: 600px;
+  color: black;
+  background: url('../images/quiz/bgr.png') no-repeat center center;
+  background-size: cover;
+  z-index: 15;
+  pointer-events: auto;
+}
+
+#result-title { /* 결과 확인 */
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 33px;
+  font-weight: bold;
+  text-align: center;
+}
+
+#result-score { /* 총 3문항 중 ~ */
+  position: absolute;
+  top: 120px; 
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+  text-align: center;
+}
+
+.highlight {
+  color: rgb(255, 166, 0);
+}
+
+#retry-btn {
+  display: block;
+  margin: 400px auto 0 auto;
+  cursor: pointer;
+  width: auto;
+  height: 60px;
+}
+
+#result-note { /* 본 퀴즈는 ~ */
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  text-align: center;
+  line-height: 0.7;
+  white-space: pre-line; /* \n */
+}
