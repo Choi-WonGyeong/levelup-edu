@@ -10,7 +10,11 @@ sourceEl.src = `../content/01/${paddedNum}.mp4`;
 sourceEl.type = "video/mp4";
 videoEl.appendChild(sourceEl);
 
-const player = videojs('lecture-video');
+const player = videojs('lecture-video', {
+  autoplay: 'muted', // true 값으로 할 시에는 자동 재생이 안됨
+  controls: true,
+  preload: 'auto'
+});
 const VjsButton = videojs.getComponent('Button');
 
 // 드롭다운 (목차) 버튼

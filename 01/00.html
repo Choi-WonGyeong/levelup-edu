@@ -17,12 +17,14 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      
     }
 
     .wrapper {
       width: 1024px;
       height: 600px;
-      background: #fff;
+      background: url("../common/images/competency_test/test_bar_x.png") no-repeat center center;
+      background-size: cover;
       border: 1px solid #ccc;
       padding: 20px 30px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -41,6 +43,9 @@
 
     .page {
       display: none;
+      padding-top: 60px;
+      padding-right: 150px;
+      padding-left: 5px;
     }
 
     .visible {
@@ -50,8 +55,8 @@
     .question-card {
       border: 1px solid #ccc;
       border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
+      padding: 10px;
+      margin-bottom: 10px;
       background-color: #fefefe;
     }
 
@@ -124,12 +129,77 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: #fff;
+      background: url("../common/images/competency_test/test_background.jpg") no-repeat center center;
+      background-size: cover;
       z-index: 10;
       flex-direction: column;
+      text-align: center;
+      color: #333;
+      font-family: "Noto Sans KR", sans-serif;
     }
 
-    #start-screen button.start-btn {
+    #start-screen .start-content {
+      /* background: rgba(255, 255, 255, 0.6); 이 부분은 개인적으로 추가하면 더 가독성이 좋아지는거 같아서 했지만 요구사항에 없었으므로 주석*/
+      padding: 30px;
+      border-radius: 12px;
+    }
+
+    #start-screen p {
+      font-size: 25px;
+      font-weight: 600;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+
+    #start-screen .sub-text {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 20px;
+    }
+
+    #start-screen .start-btn {
+      background: url("../common/images/competency_test/test_start.png") no-repeat center center;
+      background-size: contain;
+      width: 180px;
+      height: 45px;
+      border: none;
+      margin-top: 30px;
+      cursor: pointer;
+    }
+
+    #start-screen .close-btn {
+      background: url("../common/images/competency_test/test_close.png") no-repeat center center;
+      background-size: contain;
+      width: 40px;
+      height: 40px;
+      border: none;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+    }
+
+    .progress-bar {
+      display: flex;
+      margin-top: 20px;
+    }
+
+    .progress-bar img {
+      width: auto;
+      height: 20px;
+    }
+
+    #test-screen .next-btn {
+      background: url("../common/images/competency_test/test_next.png") no-repeat center center;
+      background-size: contain;
+      width: 180px;
+      height: 45px;
+      border: none;
+      margin-top: 30px;
+      cursor: pointer;
+    }
+
+    /* #start-screen button.start-btn {
       padding: 15px 30px;
       font-size: 18px;
       border-radius: 25px;
@@ -159,7 +229,7 @@
       border: 2px solid rgb(0, 0, 0);
       cursor: pointer;
       color: black;
-    }
+    } */
   </style>
 </head>
 <body>
@@ -168,14 +238,27 @@
 
     <!-- 시작 화면 -->
     <div id="start-screen" class="visible">
-      <button class="close-btn" onclick="goToExit()">나가기</button>
-      <button class="start-btn" onclick="startSurvey()">역량진단 바로가기</button>
+      <button class="close-btn" onclick="goToExit()"></button>
+      <div class="start-content">
+        <p>
+          본 과정 시작 전 진행되는 사전 진단은<br>
+          학습자의 직무역량 수준을 확인하고<br>
+          개인별 맞춤형 보완학습을 제공하기 위한 절차입니다.
+        </p>
+        <p class="sub-text">
+          사전 역량평가는 총 30문항으로 구성되며,<br>
+          그 결과에 따라 학습자를 초급·중급·고급 수준으로 구분하고,<br>
+          각 수준에 적합한 보완학습 자료를 안내하여 효과적인 학습을 지원합니다.
+        </p>
+        <button class="start-btn" onclick="startSurvey()"></button>
+      </div>
     </div>
 
-    <h1>역량진단 평가</h1>
+<!-- 역량진단 -->
 
       <!-- 페이지 1 -->
 <div id="page1" class="page visible">
+  
   <div class="question-card">
     <div class="question-title">1. 역량진단 평가입니다</div>
     <div class="options">
@@ -230,9 +313,13 @@
     </div>
   </div>
 
-  <div class="btn-group">
-    <button type="button" onclick="goToPage2()">다음</button>
+  <div class="next-btn">
+    <button type="button" onclick="goToPage2()"></button>
   </div>
+  <div class="progress-bar">
+    <img src="../common/images/competency_test/test_progress1.png" alt="진행바 1단계">
+  </div>
+
 </div>
 
 <!-- 페이지 2 -->
@@ -295,6 +382,9 @@
       <div class="btn-group">
         <button type="button" onclick="calculateResult()">결과 보기</button>
       </div>
+      <div class="progress-bar">
+    <img src="../common/images/competency_test/test_progress2.png" alt="진행바 2단계">
+  </div>
     </div>
 
     <div id="result" style="margin-top: 20px; position: relative;"></div>

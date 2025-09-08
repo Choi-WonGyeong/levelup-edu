@@ -2,6 +2,8 @@
 ```
 levelup-edu
 ├─ 01
+│  ├─ 0.txt
+│  ├─ 00.html
 │  ├─ 01.html
 │  ├─ 02.html
 │  ├─ 03.html
@@ -297,6 +299,8 @@ levelup-edu
 │  ├─ css
 │  │  ├─ font.css
 │  │  ├─ lecture.css
+│  │  ├─ lecture_06.css
+│  │  ├─ lecture_quiz.css
 │  │  ├─ opinion.css
 │  │  ├─ quiz.css
 │  │  ├─ style.css
@@ -319,6 +323,16 @@ levelup-edu
 │  │  └─ Title_Medium.woff
 │  ├─ images
 │  │  ├─ competency_test
+│  │  │  ├─ test_background.jpg
+│  │  │  ├─ test_bar_o.png
+│  │  │  ├─ test_beginner.png
+│  │  │  ├─ test_close.png
+│  │  │  ├─ test_download.png
+│  │  │  ├─ test_progress1.png
+│  │  │  ├─ test_progress2.png
+│  │  │  ├─ test_progress3.png
+│  │  │  ├─ test_progress4.png
+│  │  │  └─ test_start.png
 │  │  ├─ learningmap_bg.png
 │  │  ├─ opinion
 │  │  │  ├─ opinion_bullet.png
@@ -360,6 +374,8 @@ levelup-edu
 │  │  ├─ application.js
 │  │  ├─ content_init.js
 │  │  ├─ lecture.js
+│  │  ├─ lecture_06.js
+│  │  ├─ lecture_quiz.js
 │  │  ├─ module_video.js
 │  │  ├─ quiz.js
 │  │  └─ summary.js
