@@ -323,16 +323,21 @@ levelup-edu
 │  │  └─ Title_Medium.woff
 │  ├─ images
 │  │  ├─ competency_test
-│  │  │  ├─ test_background.jpg
-│  │  │  ├─ test_bar_o.png
-│  │  │  ├─ test_beginner.png
-│  │  │  ├─ test_close.png
-│  │  │  ├─ test_download.png
-│  │  │  ├─ test_progress1.png
-│  │  │  ├─ test_progress2.png
-│  │  │  ├─ test_progress3.png
-│  │  │  ├─ test_progress4.png
-│  │  │  └─ test_start.png
+│  │  │  ├─ back.png
+│  │  │  ├─ background.jpg
+│  │  │  ├─ bar_o.png
+│  │  │  ├─ bar_x.png
+│  │  │  ├─ beginner.png
+│  │  │  ├─ close.png
+│  │  │  ├─ download.png
+│  │  │  ├─ next.png
+│  │  │  ├─ progress1.png
+│  │  │  ├─ progress2.png
+│  │  │  ├─ progress3.png
+│  │  │  ├─ progress4.png
+│  │  │  ├─ progress5.png
+│  │  │  ├─ progress6.png
+│  │  │  └─ start.png
 │  │  ├─ learningmap_bg.png
 │  │  ├─ opinion
 │  │  │  ├─ opinion_bullet.png
@@ -473,6 +478,8 @@ levelup-edu
 │     ├─ 28.pdf
 │     ├─ 29.pdf
 │     └─ 30.pdf
+├─ etc
+│  └─ 01_1
 └─ index.html
 
 ```
