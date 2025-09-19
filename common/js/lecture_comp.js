@@ -10,29 +10,52 @@ function goToExit() {
   window.location.href = "01.html";
 }
 
-function goToPage2() {
-  for (let i = 1; i <= 5; i++) {
-    if (!document.querySelector(`input[name="q${i}"]:checked`)) {
-      alert(`${i}번 질문에 응답해주세요.`);
-      return;
+function goToPage(pageNum) {
+  // 현재 보이는 페이지 찾기
+  const currentPage = document.querySelector(".page.visible");
+  if (currentPage) {
+    // 현재 페이지 번호 가져오기
+    const currentPageId = currentPage.id; // 예: "page3"
+    const currentPageNum = parseInt(currentPageId.replace("page", ""));
+
+    // 현재 페이지의 문항 검사
+    if (!validatePage(currentPageNum)) {
+      return; // 응답 누락 시 이동 막기
     }
   }
-  document.getElementById('page1').classList.remove('visible');
-  document.getElementById('page2').classList.add('visible');
+
+  // 모든 페이지 숨기고 이동
+  const pages = document.querySelectorAll(".page");
+  pages.forEach(p => p.classList.remove("visible"));
+  document.getElementById(`page${pageNum}`).classList.add("visible");
+}
+
+// 특정 페이지 응답 체크 함수
+function validatePage(pageNum) {
+  const start = (pageNum - 1) * 5 + 1; // 페이지별 시작 문항 번호
+  const end = start + 4; // 페이지별 끝 문항 번호
+
+  for (let i = start; i <= end; i++) {
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    if (!selected) {
+      alert(`${i}번 문항에 응답해주세요.`);
+      return false;
+    }
+  }
+  return true;
 }
 
 function calculateResult() {
+  // 마지막 페이지 응답 검사
+  if (!validatePage(6)) return;
+
   let total = 0;
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 30; i++) {
     const selected = document.querySelector(`input[name="q${i}"]:checked`);
-    if (!selected) {
-      alert(`${i}번 질문에 응답해주세요.`);
-      return;
-    }
     total += Number(selected.value);
   }
 
-  const avg = total / 10;
+  const avg = total / 30;
   let level = "";
   if (avg < 3) {
     level = "초급자";
@@ -54,21 +77,27 @@ function calculateResult() {
         <div class="card ${level === '초급자' ? 'highlight' : ''}">
           <h3>초급자</h3>
           <p>평균 3점 미만</p>
-          <a href="content/1.pdf" download target="_black">보충자료 다운로드</a>
+          <a href="content/1.pdf" download target="_blank">보충자료 다운로드</a>
         </div>
         <div class="card ${level === '중급자' ? 'highlight' : ''}">
           <h3>중급자</h3>
           <p>평균 3~4점</p>
-          <a href="content/2.pdf" download target="_black">보충자료 다운로드</a>
+          <a href="content/2.pdf" download target="_blank">보충자료 다운로드</a>
         </div>
         <div class="card ${level === '고급자' ? 'highlight' : ''}">
           <h3>고급자</h3>
           <p>평균 4점 초과</p>
-          <a href="content/3.pdf" download target="_black">보충자료 다운로드</a>
+          <a href="content/3.pdf" download target="_blank">보충자료 다운로드</a>
         </div>
       </div>
     </div>
   `;
 
-  document.getElementById('page2').classList.remove('visible');
+  // 결과 화면 표시
+  const pages = document.querySelectorAll(".page");
+  pages.forEach(p => p.classList.remove("visible"));
+  resultDiv.classList.add("visible");
+
+  // 스크롤 허용
+  document.querySelector(".wrapper").classList.remove("noscroll");
 }
