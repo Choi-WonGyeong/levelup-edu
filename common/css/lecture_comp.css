@@ -33,16 +33,32 @@ h1 {
   margin-bottom: 30px;
 }
 
-.page {
+/* .page {
   display: none;
   padding-top: 60px;
   padding-right: 150px;
   padding-left: 5px;
+} */
+
+.page {
+  display: none;
+  height: 100%;
+  position: relative;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .visible {
   display: block;
 }
+
+.questions-container {
+  height: calc(100% - 70px); /* 버튼 높이만큼 제외 */
+  overflow-y: auto;
+  padding-right: 10px;
+   margin-top: 40px;
+}
+
 
 .question-card {
   border: 1px solid #ccc;
@@ -63,9 +79,16 @@ h1 {
   cursor: pointer;
 }
 
-.btn-group {
+/* .btn-group {
   text-align: center;
   margin-top: 30px;
+} */
+
+.btn-group {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
 }
 
 button {
