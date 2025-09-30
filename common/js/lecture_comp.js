@@ -14,10 +14,12 @@ function goToExit() {
 
 function goToPage(pageNum) {
   const currentPage = document.querySelector(".page.visible");
+
   if (currentPage) {
     const currentPageId = currentPage.id;
     const currentPageNum = parseInt(currentPageId.replace("page", ""));
-    if (!validatePage(currentPageNum)) {
+
+    if (pageNum > currentPageNum && !validatePage(currentPageNum)) {
       return;
     }
   }
@@ -26,10 +28,10 @@ function goToPage(pageNum) {
   pages.forEach(p => p.classList.remove("visible"));
   document.getElementById(`page${pageNum}`).classList.add("visible");
 
-  // 🔥 페이지 번호별 배경 교체
   const wrapper = document.querySelector(".wrapper");
-  wrapper.style.backgroundImage = `url("../common/images/comp/progress${pageNum}.png")`;
+  wrapper.style.backgroundImage = `url('../common/images/comp/progress${pageNum}.png')`;
 }
+
 
 function validatePage(pageNum) {
   const start = (pageNum - 1) * 5 + 1;
