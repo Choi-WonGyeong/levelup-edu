@@ -2,7 +2,6 @@ function startSurvey() {
   document.getElementById("start-screen").style.display = "none";
   document.getElementById("page1").classList.add("visible");
 
-  // 스크롤 잠금 해제
   document.querySelector(".wrapper").classList.remove("noscroll");
 }
 
@@ -141,7 +140,7 @@ function renderQuestions() {
     page.id = `page${pageNum}`;
     page.className = "page";
 
-    // 질문 5개만 담는 컨테이너
+
     const container = document.createElement("div");
     container.className = "questions-container";
 
@@ -161,9 +160,6 @@ function renderQuestions() {
       `;
     }
 
-    page.appendChild(container);
-
-    // 버튼 그룹 (페이지 밖에 고정)
     const btnGroup = document.createElement("div");
     btnGroup.className = "btn-group";
     if (pageNum > 1) {
@@ -173,6 +169,7 @@ function renderQuestions() {
       ? `<button class="next-btn" onclick="goToPage(${pageNum + 1})"></button>`
       : `<button class="result-btn" onclick="calculateResult()"></button>`;
 
+    page.appendChild(container);
     page.appendChild(btnGroup);
     wrapper.appendChild(page);
 
