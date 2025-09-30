@@ -15,14 +15,16 @@ body {
 .wrapper {
   width: 1024px;
   height: 600px;
-  background: url("../images/comp/progress1.png") no-repeat center center;
   background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
   border: 1px solid #ccc;
   padding: 20px 30px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   position: relative;
   overflow-y: auto;
 }
+
 
 .wrapper.noscroll {
   overflow: hidden;
@@ -53,10 +55,10 @@ h1 {
 }
 
 .questions-container {
-  height: calc(100% - 70px); /* 버튼 높이만큼 제외 */
+  height: calc(100% - 65px);
   overflow-y: auto;
   padding-right: 10px;
-   margin-top: 40px;
+  margin-top: 40px;
 }
 
 
@@ -86,7 +88,7 @@ h1 {
 
 .btn-group {
   position: absolute;
-  bottom: 20px;
+  bottom: -20px;
   width: 100%;
   text-align: center;
 }
@@ -235,7 +237,7 @@ a:hover {
   cursor: pointer;
   position: absolute;
   bottom: 20px;
-  left: 20px;
+  left: -20px;
 }
 
 .result-btn {

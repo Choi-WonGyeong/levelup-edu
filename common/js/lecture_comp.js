@@ -2,6 +2,9 @@ function startSurvey() {
   document.getElementById("start-screen").style.display = "none";
   document.getElementById("page1").classList.add("visible");
 
+  const wrapper = document.querySelector(".wrapper");
+  wrapper.style.backgroundImage = 'url("../common/images/comp/progress1.png")'; 
+
   document.querySelector(".wrapper").classList.remove("noscroll");
 }
 
@@ -22,6 +25,10 @@ function goToPage(pageNum) {
   const pages = document.querySelectorAll(".page");
   pages.forEach(p => p.classList.remove("visible"));
   document.getElementById(`page${pageNum}`).classList.add("visible");
+
+  // 🔥 페이지 번호별 배경 교체
+  const wrapper = document.querySelector(".wrapper");
+  wrapper.style.backgroundImage = `url("../common/images/comp/progress${pageNum}.png")`;
 }
 
 function validatePage(pageNum) {
