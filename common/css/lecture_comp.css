@@ -35,13 +35,6 @@ h1 {
   margin-bottom: 30px;
 }
 
-/* .page {
-  display: none;
-  padding-top: 60px;
-  padding-right: 150px;
-  padding-left: 5px;
-} */
-
 .page {
   display: none;
   height: 100%;
@@ -71,6 +64,7 @@ h1 {
 }
 
 .question-title {
+  font-size: 16px;
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -80,11 +74,6 @@ h1 {
   margin-right: 20px;
   cursor: pointer;
 }
-
-/* .btn-group {
-  text-align: center;
-  margin-top: 30px;
-} */
 
 .btn-group {
   position: absolute;
@@ -121,10 +110,10 @@ button {
   border-radius: 8px;
 }
 
-.highlight {
+/* .highlight {
   border: 2px solid #333;
   background-color: #eef;
-}
+} */
 
 a {
   display: inline-block;
@@ -161,14 +150,14 @@ a:hover {
 }
 
 #start-screen p {
-  font-size: 25px;
+  font-size: 32px;
   font-weight: 600;
   line-height: 1.6;
   margin: 10px 0;
 }
 
 #start-screen .sub-text {
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 600;
   margin-top: 20px;
 }
@@ -250,4 +239,78 @@ a:hover {
   position: absolute;
   bottom: 20px;
   right: 20px;
+}
+
+
+.result-content {
+  text-align: left;
+  padding: 40px;
+  color: #333;
+}
+
+.result-title { /* freesentation 폰트 6 */
+  text-align: left;
+  font-size: 27px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.result-text { /* freesentation 폰트 4 */
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.result-subtext { /* freesentation 폰트 4 */
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.level-container {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin-top: 50px;
+}
+
+.level-card {
+  text-align: center;
+}
+
+.level-card img {
+  display: block;
+  margin: 0 auto 10px;
+  max-width: 200px;
+}
+
+.btn-download{
+  display:inline-block;
+  width:150px;        
+  height:45px;
+  background:center/contain no-repeat url("../images/comp/download.png");
+  border:0;
+  cursor:pointer;
+  text-indent:-9999px; 
+  overflow:hidden;
+}
+
+#result{ 
+  position:relative;
+}
+.close-x{
+  position:absolute; 
+  top:70px; 
+  right:30px;
+  display:inline-flex; align-items:center; justify-content:center;
+  width:40px; 
+  height:40px; 
+  border:0; 
+  background:transparent;
+  font-size:25px; 
+  line-height:40px; 
+  font-weight:700; 
+  color:#434343;
+  cursor:pointer;
+}
+.close-x:hover{ 
+  background-color: rgba(0,0,0,.08); 
 }

@@ -18,11 +18,11 @@ function goToPage(pageNum) {
   if (currentPage) {
     const currentPageId = currentPage.id;
     const currentPageNum = parseInt(currentPageId.replace("page", ""));
-
     if (pageNum > currentPageNum && !validatePage(currentPageNum)) {
       return;
     }
   }
+
 
   const pages = document.querySelectorAll(".page");
   pages.forEach(p => p.classList.remove("visible"));
@@ -59,52 +59,53 @@ function calculateResult() {
   const avg = total / 30;
   let level = "";
   if (avg < 3) {
-    level = "초급자";
+    level = "초급";
   } else if (avg <= 4) {
-    level = "중급자";
+    level = "중급";
   } else {
-    level = "고급자";
+    level = "고급";
   }
 
   const resultDiv = document.getElementById("result");
   resultDiv.innerHTML = `
-    <button class="result-close-btn" onclick="goToExit()">나가기</button>
-    <div style="margin-top: 20px;">
-      <h2>직무역량진단 결과</h2>
-      <p>당신의 역량은 <strong>${level}</strong> 입니다. (평균: ${avg.toFixed(2)}점)</p>
-      <p>나의 역량진단에 따라 보충 자료를 학습하세요.</p>
+      <button class="close-x" aria-label="닫기" onclick="goToExit()">×</button>
+      <div class="result-content">
+      <h1 class="result-title">사전 역량 진단 결과</h1>
+      <p class="result-text">훈련생님의 직무역량 수준은 <strong>${level}</strong>으로 확인되었습니다.</p>
+      <p class="result-subtext">진단 결과에 따라 제공되는 보충 학습자료를 활용하시기 바랍니다.</p>
 
-      <div class="card-container">
-        <div class="card ${level === '초급자' ? 'highlight' : ''}">
-          <h3>초급자</h3>
-          <p>평균 3점 미만</p>
-          <a href="content/1.pdf" download target="_blank">보충자료 다운로드</a>
+        <div class="level-container">
+          <div class="level-card ${level === '초급' ? 'highlight' : ''}">
+          <img src="../common/images/comp/beginner.png" alt="초급자">
+            <a href="../document/1.pdf" download class="btn-download" aria-label="초급 자료 다운로드">다운로드</a>
+          </div>
+          <div class="level-card ${level === '중급' ? 'highlight' : ''}">
+          <img src="../common/images/comp/intermediate.png" alt="중급자">
+            <a href="../document/2.pdf" download class="btn-download" aria-label="중급 자료 다운로드">다운로드</a>
+          </div>
+          <div class="level-card ${level === '고급' ? 'highlight' : ''}">
+            <img src="../common/images/comp/advanced.png" alt="고급자">
+            <a href="../document/3.pdf" download class="btn-download" aria-label="고급 자료 다운로드">다운로드</a>
+          </div>
         </div>
-        <div class="card ${level === '중급자' ? 'highlight' : ''}">
-          <h3>중급자</h3>
-          <p>평균 3~4점</p>
-          <a href="content/2.pdf" download target="_blank">보충자료 다운로드</a>
-        </div>
-        <div class="card ${level === '고급자' ? 'highlight' : ''}">
-          <h3>고급자</h3>
-          <p>평균 4점 초과</p>
-          <a href="content/3.pdf" download target="_blank">보충자료 다운로드</a>
-        </div>
-      </div>
-    </div>
-  `;
+      </div>`;
 
+  // 페이지 숨기고 결과만 표시
   const pages = document.querySelectorAll(".page");
   pages.forEach(p => p.classList.remove("visible"));
   resultDiv.classList.add("visible");
 
-  document.querySelector(".wrapper").classList.remove("noscroll");
+  // 배경 progress6 고정
+  const wrapper = document.querySelector(".wrapper");
+  wrapper.style.backgroundImage = "url('../common/images/comp/progress6.png')";
 }
+
+
 
 
 ///////////////////////////////////////////// 역량검사질문 /////////////////////////////////////////////
 const questions = [
-  "조직 내에서 인사조직의 역할과 기본적인 개념에 대해 얼마나 이해하고 있습니까ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ?",
+  "조직 내에서 인사조직의 역할과 기본적인 개념에 대해 얼마나 이해하고 있습니까?",
   "조직 내 수직적 및 수평적 커뮤니케이션의 특징을 구분하고, 각각의 사례를 파악할 수 있습니까?",
   "다양한 리더십 유형과 특성을 구분하고, 성과 중심 리더십의 핵심을 파악할 수 있습니까?",
   "조직문화에 적응하고 팀워크를 강화하기 위한 신입사원의 역할을 이해하고 실천할 수 있습니까?",
