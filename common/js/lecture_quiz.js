@@ -1,4 +1,4 @@
-// lecture_quiz.js (full, final)
+// lecture_quiz.js (full, judge→explain→next, 1024x600)
 
 const quizData = [
   { q: "Q1. 조직 성과는 인사 조직이 효과적으로 기능하고 있는지를 평가하는 기준이 될 수 없다.", answer: "O" },
@@ -17,15 +17,15 @@ const pageNum = parseInt(currentFile.split('.')[0], 10) || 5;
 const maxPage = 7;
 const paddedNum = String(pageNum).padStart(2, '0');
 
-// 소스: 인트로 영상
+// 인트로 영상 소스
 const sourceEl = document.createElement('source');
-sourceEl.src = `../content/01/quiz.mp4`;
+sourceEl.src = `../content/01/quiz.mp4`;  // 필요시 조정
 sourceEl.type = "video/mp4";
 videoEl.appendChild(sourceEl);
 
 const player = videojs('lecture-video');
 
-// 컨트롤 구성 (01.html 동일)
+// ===== 01.html 컨트롤 =====
 const tocButton = player.controlBar.addChild('button', { name: 'TocButton' });
 tocButton.addClass('vjs-custom-control');
 tocButton.el().innerHTML = '📖';
@@ -33,10 +33,10 @@ tocButton.el().innerHTML = '📖';
 const dropdown = document.createElement('div');
 dropdown.className = 'dropdown-menu';
 for (let i = 1; i <= maxPage; i++) {
-  const padded = String(i).padStart(2, '0');
+  const p = String(i).padStart(2, '0');
   const item = document.createElement('div');
-  item.innerText = `${padded}차시`;
-  item.onclick = () => (location.href = `${padded}.html`);
+  item.innerText = `${p}차시`;
+  item.onclick = () => (location.href = `${p}.html`);
   dropdown.appendChild(item);
 }
 tocButton.el().appendChild(dropdown);
@@ -97,18 +97,17 @@ player.ready(() => {
   player.volume(0.5);
 });
 
-// ===== 오버레이 요소 참조 및 위치 고정(비디오 위) =====
-const startBtn      = document.getElementById('start-btn');
-const quizContainer = document.getElementById('quiz-container');
+// ===== 퀴즈/오버레이 요소 =====
+const startBtn      = document.getElementById('start-btn');      // ../common/images/quiz/start.png
+const quizContainer = document.getElementById('quiz-container'); // bgr.png 배경
 const quizResult    = document.getElementById('quiz-result');
 const questionEl    = document.getElementById('quiz-question');
 const feedbackEl    = document.getElementById('quiz-feedback');
-const overlayEl     = document.getElementById('correct-overlay');
 const btnO          = document.getElementById('btnO');
 const btnX          = document.getElementById('btnX');
 const retryBtn      = document.getElementById('retry-btn');
 
-// 플레이어 DOM 안으로 옮겨 비디오 위에 정확히 오버레이
+// 플레이어 DOM 안에 붙여서 1024×600 캔버스 위에 정확히 표시
 player.ready(() => {
   const container = player.el();
   [startBtn, quizContainer, quizResult].forEach((el) => {
@@ -117,83 +116,135 @@ player.ready(() => {
 });
 
 // START 버튼 표시/숨김
-function hideStartBtn() { if (startBtn) startBtn.style.display = 'none'; }
-function showStartBtn() { if (startBtn) startBtn.style.display = 'block'; }
+function hideStartBtn(){ if (startBtn) startBtn.style.display='none'; }
+function showStartBtn(){ if (startBtn) startBtn.style.display='block'; }
 
-// 재생 중에는 항상 숨김
 player.on('loadstart', hideStartBtn);
 player.on('loadedmetadata', hideStartBtn);
 player.on('playing', hideStartBtn);
-player.on('pause', hideStartBtn); // 수동 일시정지에도 안 뜨게
+player.on('pause', hideStartBtn);
+player.on('ended', () => setTimeout(showStartBtn, 0));   // 인트로 끝났을 때만 노출
 
-// 끝났을 때만 표시
-player.on('ended', () => setTimeout(showStartBtn, 0));
+// ===== 새 오버레이: 판정/해설 이미지 + next 버튼 =====
+const stageImg = document.createElement('img');  // correct.png / wrong.png / *_comment.png
+stageImg.id = 'stage-img';
+stageImg.style.display = 'none';
 
-// (선택) 자동재생 차단 시 버튼 노출 원하면 주석 해제
-// const p = player.play?.(); if (p && p.catch) p.catch(() => showStartBtn());
+const nextGoBtn = document.createElement('img'); // next.png (우하단)
+nextGoBtn.id = 'next-btn';
+nextGoBtn.src = '../common/images/quiz/next.png';
+nextGoBtn.style.display = 'none';
+
+player.ready(() => {
+  const container = player.el();
+  container.appendChild(stageImg);
+  container.appendChild(nextGoBtn);
+});
+
+// 상태 플래그
+let inJudge = false;    // 정답/오답 이미지 단계
+let inExplain = false;  // 해설 이미지 단계
+let judgeTimer = null;
+
+// 모드 전환
+function enterJudgeMode(isCorrect){
+  inJudge = true; inExplain = false;
+
+  quizContainer.classList.remove('explain-mode'); // 안전 초기화
+  quizContainer.classList.add('plain-mode');      // 흰 배경 + OX 숨김
+  questionEl.classList.add('dim-question');       // 질문 흐리게
+
+  stageImg.src = isCorrect
+    ? '../common/images/quiz/correct.png'
+    : '../common/images/quiz/wrong.png';
+  stageImg.style.display = 'block';
+
+  clearTimeout(judgeTimer);
+  judgeTimer = setTimeout(() => enterExplainMode(isCorrect), 2000);
+}
+
+function enterExplainMode(isCorrect){
+  inExplain = true;
+  quizContainer.classList.add('explain-mode');
+
+  stageImg.src = isCorrect
+    ? '../common/images/quiz/correct_comment.png'
+    : '../common/images/quiz/wrong_comment.png';
+  stageImg.style.display = 'block';
+
+  // ★ 마지막 문제면 result.png, 아니면 next.png
+  const isLast = (currentQuiz === quizData.length - 1);
+  nextGoBtn.src = isLast
+    ? '../common/images/quiz/result.png'
+    : '../common/images/quiz/next.png';
+
+  nextGoBtn.style.display = 'block';
+}
+
+function exitOverlayModes(){
+  inJudge = false; inExplain = false;
+  clearTimeout(judgeTimer);
+
+  stageImg.style.display = 'none';
+  nextGoBtn.style.display = 'none';
+
+  questionEl.classList.remove('dim-question');
+  quizContainer.classList.remove('plain-mode', 'explain-mode');
+}
 
 // ===== 퀴즈 로직 =====
-function loadQuiz() {
+function loadQuiz(){
   feedbackEl.style.display = 'none';
-  if (currentQuiz < quizData.length) {
+  if (currentQuiz < quizData.length){
     questionEl.innerText = quizData[currentQuiz].q;
   } else {
     showResult();
   }
 }
 
-function answer(userAnswer) {
-  if (answered) return;
+function answer(userAnswer){
+  if (answered || inJudge || inExplain) return;
   answered = true;
 
   const correctAnswer = quizData[currentQuiz].answer;
+  const isCorrect = (userAnswer === correctAnswer);
 
-  btnO.style.display = 'none';
-  btnX.style.display = 'none';
-  overlayEl.style.display = 'block';
-
-  if (userAnswer === correctAnswer) {
-    feedbackEl.innerText = '정답입니다! ✅';
-    feedbackEl.style.color = 'lightgreen';
-    correctCount++;
-  } else {
-    feedbackEl.innerText = `틀렸습니다! ❌ 정답: ${correctAnswer}`;
-    feedbackEl.style.color = 'red';
-  }
-  feedbackEl.style.display = 'block';
-
-  setTimeout(() => {
-    answered = false;
-    currentQuiz++;
-    overlayEl.style.display = 'none';
-    btnO.style.display = 'inline-block';
-    btnX.style.display = 'inline-block';
-    loadQuiz();
-  }, 150);
+  if (isCorrect) correctCount++;
+  enterJudgeMode(isCorrect); // 2초 뒤 해설 진입
 }
 
-function showResult() {
+function goNext(){
+  currentQuiz++;
+  answered = false;
+  exitOverlayModes();
+
+  if (currentQuiz < quizData.length){
+    loadQuiz();
+  } else {
+    showResult();
+  }
+}
+
+function showResult(){
   quizContainer.classList.remove('active');
   quizResult.style.display = 'flex';
   document.getElementById('result-score').innerHTML =
     `총 ${quizData.length}문항 중 <span class="highlight">${correctCount}</span>문항을 맞히셨습니다.`;
 }
 
-window.retryQuiz = function () {
-  currentQuiz = 0;
-  correctCount = 0;
-  answered = false;
+window.retryQuiz = function(){
+  currentQuiz = 0; correctCount = 0; answered = false;
+  exitOverlayModes();
   feedbackEl.style.display = 'none';
   quizResult.style.display = 'none';
   quizContainer.classList.add('active');
   loadQuiz();
 };
 
-// START 클릭 → 퀴즈 시작
-window.startQuiz = function () {
+window.startQuiz = function(){
   hideStartBtn();
-  player.pause();                 // 영상 멈춤 (컨트롤바 유지)
-  quizContainer.classList.add('active'); // 퀴즈 오버레이
+  player.pause();                       // 영상 멈춤(컨트롤 유지)
+  quizContainer.classList.add('active');
   loadQuiz();
 };
 
@@ -203,10 +254,10 @@ window.addEventListener('DOMContentLoaded', () => {
   btnX.addEventListener('click', () => answer('X'));
   retryBtn.addEventListener('click', () => {
     quizResult.style.display = 'none';
-    currentQuiz = 0;
-    correctCount = 0;
-    answered = false;
+    currentQuiz = 0; correctCount = 0; answered = false;
+    exitOverlayModes();
     quizContainer.classList.add('active');
     loadQuiz();
   });
+  nextGoBtn.addEventListener('click', goNext);
 });
