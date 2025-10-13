@@ -7,47 +7,39 @@
   <link href="../common/css/lecture_quiz.css" rel="stylesheet" />
 </head>
 <body>
-  <div id="app-wrapper">
-  <!-- <div id="video-wrapper">
-    <video id="lecture-video"
-           class="video-js vjs-default-skin"
-           controls
-           preload="auto"
-           poster="../common/test_images/background.jpg">
-    </video> -->
-    <div id="start-screen">
-      <img src="../common/images/quiz/startscreen.png" class="start-bg" />
-      <img src="../common/images/quiz/start.png" class="start-btn" onclick="startQuiz()" />
+
+  <!-- 01.html과 동일한 video.js 플레이어 -->
+  <video id="lecture-video" class="video-js vjs-default-skin" controls preload="auto"></video>
+
+  <!-- 인트로 종료 후 뜨는 시작 버튼(영상 위 오버레이) -->
+  <img id="start-btn" src="../common/images/quiz/start.png" alt="시작" onclick="startQuiz()" style="display:none;" />
+
+  <!-- 퀴즈 영역(영상 위 오버레이) -->
+  <div id="quiz-container">
+    <div class="quiz-question" id="quiz-question"></div>
+    <div class="quiz-buttons">
+      <button id="btnO"><img src="../common/images/quiz/o.png" alt="O" class="quiz-btn-img"></button>
+      <button id="btnX"><img src="../common/images/quiz/x.png" alt="X" class="quiz-btn-img"></button>
     </div>
+    <div id="quiz-feedback"></div>
 
-    <div id="quiz-container">
-      <div class="quiz-question" id="quiz-question"></div>
-      <div class="quiz-buttons">
-        <button id="btnO"><img src="../common/images/quiz/o.png" alt="O" class="quiz-btn-img"></button>
-        <button id="btnX"><img src="../common/images/quiz/x.png" alt="X" class="quiz-btn-img"></button>
-      </div>
-      <div id="quiz-feedback"></div>
-
-      <div id="correct-overlay">
-        <img id="correct-o" src="../common/images/quiz/correct_o.png" alt="correct O" />
-        <img id="correct-x" src="../common/images/quiz/correct_x.png" alt="correct X" />
-      </div>
+    <div id="correct-overlay">
+      <img id="correct-o" src="../common/images/quiz/correct_o.png" alt="correct O" />
+      <img id="correct-x" src="../common/images/quiz/correct_x.png" alt="correct X" />
     </div>
+  </div>
 
-    <div id="quiz-result" style="display:none;">
-      <h2 id="result-title">결과 확인</h2>
-      <p id="result-score">총 3문항 중 0문항을 맞히셨습니다.</p>
-      <img id="retry-btn" src="../common/images/quiz/again.png" alt="다시 풀기" />
-      <p id="result-note">
-        본 퀴즈는 평가에 반영되지 않습니다.<br>
-        학습 이해를 돕기 위한 활동입니다.
-      </p>
-    </div>
-
-
+  <div id="quiz-result" style="display:none;">
+    <h2 id="result-title">결과 확인</h2>
+    <p id="result-score">총 3문항 중 0문항을 맞히셨습니다.</p>
+    <img id="retry-btn" src="../common/images/quiz/again.png" alt="다시 풀기" />
+    <p id="result-note">
+      본 퀴즈는 평가에 반영되지 않습니다.<br>
+      학습 이해를 돕기 위한 활동입니다.
+    </p>
   </div>
 
   <script src="../common/lib/video-js/video.min.js"></script>
-  <script src="../common/js/lecture_quiz.js"></script> 
+  <script src="../common/js/lecture_quiz.js"></script>
 </body>
 </html>
