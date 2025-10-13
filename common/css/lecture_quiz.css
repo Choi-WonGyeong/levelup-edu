@@ -126,8 +126,8 @@ body{
 #next-btn{
   display: none;
   position: absolute;
-  right: 24px; bottom: 24px;
-  height: 60px; width: auto;
+  right: 55px; bottom: 24px;
+  height: 55px; width: auto;
   cursor: pointer;
   z-index: 1020;
   pointer-events: auto;
@@ -159,3 +159,25 @@ body{
   position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%);
   font-size: 16px; text-align: center; line-height: .7; white-space: pre-line;
 }
+/* 해설 화면 우측 상단 문제 텍스트 (박스/테두리/배경 없음) */
+#q-badge {
+  display: none;              /* JS로 on/off */
+  position: absolute;
+  top: 50px;                  /* 위치 미세조정은 여기 */
+  right: 16px;                /* ← 필요시 값만 바꿔 */
+  max-width: 62%;             /* 길면 자동 줄바꿈 */
+  color: #222;                /* 순수 텍스트 */
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 600;
+  text-align: right;          /* 우측 정렬 */
+  white-space: normal;        /* 줄바꿈 허용 */
+  z-index: 1030;              /* comment 이미지(stageImg) 위 */
+  pointer-events: none;       /* 클릭 간섭 없음 */
+}
+
+/* 해설 단계에서 본문 질문은 감춤 */
+.hidden-question { visibility: hidden; }
+
+/* 판정 단계에서만 질문 흐리게 */
+.dim-question { color:#666 !important; opacity:.5; filter:grayscale(100%); }

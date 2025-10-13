@@ -1,4 +1,4 @@
-// lecture_quiz.js (full, judge→explain→next, 1024x600)
+// lecture_quiz.js (full with judge → explain → next, Q-badge at top-right)
 
 const quizData = [
   { q: "Q1. 조직 성과는 인사 조직이 효과적으로 기능하고 있는지를 평가하는 기준이 될 수 없다.", answer: "O" },
@@ -10,22 +10,22 @@ let currentQuiz = 0;
 let correctCount = 0;
 let answered = false;
 
-// ===== 01.html 과 동일한 video.js 플레이어 세팅 =====
+// ========== 01.html과 동일한 video.js 플레이어 ==========
 const videoEl = document.getElementById('lecture-video');
 const currentFile = location.pathname.split('/').pop(); // 예: "05.html"
 const pageNum = parseInt(currentFile.split('.')[0], 10) || 5;
 const maxPage = 7;
 const paddedNum = String(pageNum).padStart(2, '0');
 
-// 인트로 영상 소스
+// 인트로 소스
 const sourceEl = document.createElement('source');
-sourceEl.src = `../content/01/quiz.mp4`;  // 필요시 조정
+sourceEl.src = `../content/01/quiz.mp4`;
 sourceEl.type = "video/mp4";
 videoEl.appendChild(sourceEl);
 
 const player = videojs('lecture-video');
 
-// ===== 01.html 컨트롤 =====
+// 컨트롤(목차/이전/다음/다운로드/페이지)
 const tocButton = player.controlBar.addChild('button', { name: 'TocButton' });
 tocButton.addClass('vjs-custom-control');
 tocButton.el().innerHTML = '📖';
@@ -33,10 +33,10 @@ tocButton.el().innerHTML = '📖';
 const dropdown = document.createElement('div');
 dropdown.className = 'dropdown-menu';
 for (let i = 1; i <= maxPage; i++) {
-  const p = String(i).padStart(2, '0');
+  const padded = String(i).padStart(2, '0');
   const item = document.createElement('div');
-  item.innerText = `${p}차시`;
-  item.onclick = () => (location.href = `${p}.html`);
+  item.innerText = `${padded}차시`;
+  item.onclick = () => (location.href = `${padded}.html`);
   dropdown.appendChild(item);
 }
 tocButton.el().appendChild(dropdown);
@@ -97,17 +97,18 @@ player.ready(() => {
   player.volume(0.5);
 });
 
-// ===== 퀴즈/오버레이 요소 =====
-const startBtn      = document.getElementById('start-btn');      // ../common/images/quiz/start.png
-const quizContainer = document.getElementById('quiz-container'); // bgr.png 배경
+// ========== 오버레이/퀴즈 요소 ==========
+const startBtn      = document.getElementById('start-btn');
+const quizContainer = document.getElementById('quiz-container');
 const quizResult    = document.getElementById('quiz-result');
 const questionEl    = document.getElementById('quiz-question');
 const feedbackEl    = document.getElementById('quiz-feedback');
+const overlayEl     = document.getElementById('correct-overlay'); // 사용하지 않지만 DOM 존재
 const btnO          = document.getElementById('btnO');
 const btnX          = document.getElementById('btnX');
 const retryBtn      = document.getElementById('retry-btn');
 
-// 플레이어 DOM 안에 붙여서 1024×600 캔버스 위에 정확히 표시
+// 플레이어 DOM 안으로 옮겨 정확히 비디오 위에 표시
 player.ready(() => {
   const container = player.el();
   [startBtn, quizContainer, quizResult].forEach((el) => {
@@ -115,44 +116,59 @@ player.ready(() => {
   });
 });
 
-// START 버튼 표시/숨김
-function hideStartBtn(){ if (startBtn) startBtn.style.display='none'; }
-function showStartBtn(){ if (startBtn) startBtn.style.display='block'; }
-
+// START 표시/숨김
+function hideStartBtn() { if (startBtn) startBtn.style.display = 'none'; }
+function showStartBtn() { if (startBtn) startBtn.style.display = 'block'; }
 player.on('loadstart', hideStartBtn);
 player.on('loadedmetadata', hideStartBtn);
 player.on('playing', hideStartBtn);
 player.on('pause', hideStartBtn);
-player.on('ended', () => setTimeout(showStartBtn, 0));   // 인트로 끝났을 때만 노출
+player.on('ended', () => setTimeout(showStartBtn, 0));
 
-// ===== 새 오버레이: 판정/해설 이미지 + next 버튼 =====
+// ===== 새 오버레이(판정/해설), next, Q-badge 생성 =====
 const stageImg = document.createElement('img');  // correct.png / wrong.png / *_comment.png
 stageImg.id = 'stage-img';
 stageImg.style.display = 'none';
 
-const nextGoBtn = document.createElement('img'); // next.png (우하단)
-nextGoBtn.id = 'next-btn';
-nextGoBtn.src = '../common/images/quiz/next.png';
-nextGoBtn.style.display = 'none';
+const nextBtn = document.createElement('img');   // next.png (우하단)
+nextBtn.id = 'next-btn';
+nextBtn.src = '../common/images/quiz/next.png';
+nextBtn.style.display = 'none';
+
+const qBadge = document.createElement('div');    // 해설 단계 우상단 문제 배지
+qBadge.id = 'q-badge';
+qBadge.style.display = 'none';
 
 player.ready(() => {
   const container = player.el();
   container.appendChild(stageImg);
-  container.appendChild(nextGoBtn);
+  container.appendChild(nextBtn);
+  container.appendChild(qBadge);
 });
 
 // 상태 플래그
-let inJudge = false;    // 정답/오답 이미지 단계
-let inExplain = false;  // 해설 이미지 단계
+let inJudge = false;      // 판정 단계(correct.png / wrong.png)
+let inExplain = false;    // 해설 단계(correct_comment.png / wrong_comment.png)
 let judgeTimer = null;
 
+// 유틸
+function showQBadge(text) {
+  qBadge.textContent = text;     // 순수 텍스트
+  qBadge.style.display = 'block';
+}
+function hideQBadge() {
+  qBadge.style.display = 'none';
+}
+
 // 모드 전환
-function enterJudgeMode(isCorrect){
+function enterJudgeMode(isCorrect) {
   inJudge = true; inExplain = false;
 
-  quizContainer.classList.remove('explain-mode'); // 안전 초기화
-  quizContainer.classList.add('plain-mode');      // 흰 배경 + OX 숨김
-  questionEl.classList.add('dim-question');       // 질문 흐리게
+  // 배경 흰색 + O/X 버튼 숨김 + 질문 흐리게
+  quizContainer.classList.add('plain-mode');
+  questionEl.classList.remove('hidden-question');
+  questionEl.classList.add('dim-question');
+  hideQBadge();
 
   stageImg.src = isCorrect
     ? '../common/images/quiz/correct.png'
@@ -163,46 +179,45 @@ function enterJudgeMode(isCorrect){
   judgeTimer = setTimeout(() => enterExplainMode(isCorrect), 2000);
 }
 
-function enterExplainMode(isCorrect){
+function enterExplainMode(isCorrect) {
   inExplain = true;
-  quizContainer.classList.add('explain-mode');
+
+  // 본문 질문 숨기고, 우상단 배지에 문제 노출
+  questionEl.classList.remove('dim-question');
+  questionEl.classList.add('hidden-question');
+  const qText = quizData[currentQuiz]?.q || '';
+  showQBadge(qText);
 
   stageImg.src = isCorrect
     ? '../common/images/quiz/correct_comment.png'
     : '../common/images/quiz/wrong_comment.png';
   stageImg.style.display = 'block';
 
-  // ★ 마지막 문제면 result.png, 아니면 next.png
-  const isLast = (currentQuiz === quizData.length - 1);
-  nextGoBtn.src = isLast
-    ? '../common/images/quiz/result.png'
-    : '../common/images/quiz/next.png';
-
-  nextGoBtn.style.display = 'block';
+  nextBtn.style.display = 'block';
 }
 
-function exitOverlayModes(){
-  inJudge = false; inExplain = false;
-  clearTimeout(judgeTimer);
+function exitOverlayModes() {
+  inJudge = false; inExplain = false; clearTimeout(judgeTimer);
 
   stageImg.style.display = 'none';
-  nextGoBtn.style.display = 'none';
+  nextBtn.style.display  = 'none';
+  hideQBadge();
 
-  questionEl.classList.remove('dim-question');
-  quizContainer.classList.remove('plain-mode', 'explain-mode');
+  questionEl.classList.remove('dim-question', 'hidden-question');
+  quizContainer.classList.remove('plain-mode');
 }
 
-// ===== 퀴즈 로직 =====
-function loadQuiz(){
+// ========== 퀴즈 로직 ==========
+function loadQuiz() {
   feedbackEl.style.display = 'none';
-  if (currentQuiz < quizData.length){
+  if (currentQuiz < quizData.length) {
     questionEl.innerText = quizData[currentQuiz].q;
   } else {
     showResult();
   }
 }
 
-function answer(userAnswer){
+function answer(userAnswer) {
   if (answered || inJudge || inExplain) return;
   answered = true;
 
@@ -210,30 +225,34 @@ function answer(userAnswer){
   const isCorrect = (userAnswer === correctAnswer);
 
   if (isCorrect) correctCount++;
-  enterJudgeMode(isCorrect); // 2초 뒤 해설 진입
+  enterJudgeMode(isCorrect);   // 판정 단계 진입
 }
 
-function goNext(){
+function goNext() {
   currentQuiz++;
   answered = false;
+
   exitOverlayModes();
 
-  if (currentQuiz < quizData.length){
+  if (currentQuiz < quizData.length) {
     loadQuiz();
   } else {
     showResult();
   }
 }
 
-function showResult(){
+function showResult() {
   quizContainer.classList.remove('active');
   quizResult.style.display = 'flex';
   document.getElementById('result-score').innerHTML =
     `총 ${quizData.length}문항 중 <span class="highlight">${correctCount}</span>문항을 맞히셨습니다.`;
 }
 
-window.retryQuiz = function(){
-  currentQuiz = 0; correctCount = 0; answered = false;
+window.retryQuiz = function () {
+  currentQuiz = 0;
+  correctCount = 0;
+  answered = false;
+
   exitOverlayModes();
   feedbackEl.style.display = 'none';
   quizResult.style.display = 'none';
@@ -241,9 +260,9 @@ window.retryQuiz = function(){
   loadQuiz();
 };
 
-window.startQuiz = function(){
+window.startQuiz = function () {
   hideStartBtn();
-  player.pause();                       // 영상 멈춤(컨트롤 유지)
+  player.pause();                 // 영상 멈춤 (컨트롤바 유지)
   quizContainer.classList.add('active');
   loadQuiz();
 };
@@ -254,10 +273,12 @@ window.addEventListener('DOMContentLoaded', () => {
   btnX.addEventListener('click', () => answer('X'));
   retryBtn.addEventListener('click', () => {
     quizResult.style.display = 'none';
-    currentQuiz = 0; correctCount = 0; answered = false;
+    currentQuiz = 0;
+    correctCount = 0;
+    answered = false;
     exitOverlayModes();
     quizContainer.classList.add('active');
     loadQuiz();
   });
-  nextGoBtn.addEventListener('click', goNext);
+  nextBtn.addEventListener('click', goNext);
 });
