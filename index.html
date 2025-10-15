@@ -105,7 +105,9 @@
 			chapters.forEach((ch, idx) => {
 				const li = document.createElement('li');
 				const a = document.createElement('a');
-				a.href = `./${to2(idx + 1)}/01.html`;
+				console.log("idx = ", idx);
+				if (idx==0) a.href = `./${to2(idx + 1)}/00.html`;
+				else	a.href = `./${to2(idx + 1)}/01.html`;
 				const t = document.createElement('div'); t.className = 'title'; t.textContent = ch.title || `제 ${idx + 1}차시`;
 				const d = document.createElement('div'); d.className = 'desc'; d.textContent = (ch.subtitle || ch.description || '').toString().slice(0, 120);
 				a.appendChild(t); a.appendChild(d); li.appendChild(a); list.appendChild(li);
