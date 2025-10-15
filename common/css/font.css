@@ -1,24 +1,34 @@
 @import url("https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap");
 
-@font-face {
-    font-family: "yg-jalnan";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff") format("woff");
-    font-weight: normal;
-    font-style: normal;
+/* 공통: /common/fonts/ 아래에 woff2/woff 파일 배치 */
+@font-face{
+  font-family: "Presentation";
+  src: local("프리젠테이션 4 Regular"), local("Presentation 4 Regular"),
+       url("../fonts/presentation-4-regular.woff2") format("woff2"),
+       url("../fonts/presentation-4-regular.woff") format("woff");
+  font-weight: 400; font-style: normal; font-display: swap;
 }
 
-/*경기천년바탕체*/
-@font-face {
-    font-family: "GyeonggiBatang";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/GyeonggiBatang.woff") format("woff");
-    font-weight: normal;
-    font-style: normal;
+@font-face{
+  font-family: "Presentation";
+  src: local("프리젠테이션 5 Medium"), local("Presentation 5 Medium"),
+       url("../fonts/presentation-5-medium.woff2") format("woff2"),
+       url("../fonts/presentation-5-medium.woff") format("woff");
+  font-weight: 500; font-style: normal; font-display: swap;
 }
 
-/*GmarketSans*/
-@font-face {
-    font-family: 'GmarketSansMedium';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+@font-face{
+  font-family: "Presentation";
+  src: local("프리젠테이션 6 SemiBold"), local("Presentation 6 SemiBold"),
+       url("../fonts/presentation-6-semibold.woff2") format("woff2"),
+       url("../fonts/presentation-6-semibold.woff") format("woff");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+
+@font-face{
+  font-family: "Presentation";
+  src: local("프리젠테이션 7 Bold"), local("Presentation 7 Bold"),
+       url("../fonts/presentation-7-bold.woff2") format("woff2"),
+       url("../fonts/presentation-7-bold.woff") format("woff");
+  font-weight: 700; font-style: normal; font-display: swap;
 }
