@@ -1,0 +1,26 @@
+<html>
+<head>
+  <link rel="stylesheet" href="generic.css">
+  <link rel="stylesheet" href="test.css">
+</head>
+<body>
+  <video autoplay loop muted playsinline id="myVideo" class="myVideo">
+    <source src="vid.mp4" type="video/mp4">
+  </video>
+
+  <script>
+    window.addEventListener('load', () => {
+      const video = document.getElementById('myVideo');
+      video.muted = false;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          document.addEventListener('click', () => {
+            video.play();
+          }, { once: true });
+        });
+      }
+    });
+  </script>
+</body>
+</html>
