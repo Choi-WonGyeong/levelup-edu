@@ -3,85 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <title>차시 강의</title>
-  <link href="../common/lib/video-js/video-js.css" rel="stylesheet" />
-  <link href="../common/css/lecture_06.css" rel="stylesheet" />
-
+  <link href="../common/css/lecture_sum.css" rel="stylesheet" />
 </head>
 <body>
-  <div id="video-wrapper">
-    <video id="lecture-video"
-           class="video-js vjs-default-skin"
-           controls
-           preload="auto"
-           poster="../common/test_images/background.jpg"></video>
+  <div id="wrapper">
+    <img src="../common/images/summary/bg.png" id="bg-img" />
 
-    <div id="education-container">
-      <div class="education-page active" id="edu-1">
-        <h3>기업문화에 대한 이해</h3>
-        <p>
-          1) 문화의 정의<br>
-          (1) 일정한 목적, 생활 이상을 실현하고자 습득, 공유, 전달되는 행동 양식, 생활 양식이다.<br>
-          (2) 그 과정에서 만들어진 물질적, 정신적 산물을 통틀어 이르는 말이다.<br>
-          (3) 사전적 정의의 문화<br>
-          - 사회 또는 사회 구성원의 목적 실현에 기여해야 한다.<br>
-          - 누군가에게서 누군가로 전달되어야 한다.<br>
-          - 행동이나 산물로 보여야 한다.<br><br>
+    <div id="content-screen">
+      <img src="../common/images/summary/content.png" id="content-img" />
+      <div id="content-text"></div>
 
-          2) 기업문화의 정의<br>
-          (1) 거시적인 문화의 정의를 기업이라는 조직 안으로 가져온 것이다.<br>
-          (2) 내외부 문제를 해결하는 과정의 경험을 축적, 공유하는 것이다.<br>
-          (3) 에드거 샤인 교수의 정의 : 조직 구성원이 내외부의 문제를 해결하는 과정에서 경험, 축적 공유한 것이다.<br><br>
-
-          3) 기업문화의 중요성<br>
-          (1) 조직과 경영자들은 기업문화의 혁신을 중요하게 여긴다.<br>
-          (2) 현재와 미래의 구성원도 기업 문화를 가장 중요하게 여긴다.<br>
-          (3) 문화를 바라보는 눈높이를 맞추는 과정이 필요하다.<br>
-          - 같은 용어를 사용하더라도 사람마다 정의나 기본 전제가 다르면 엉뚱한 결론에 도달할 수 있기 때문이다.
-        </p>
-      </div>
-      <div class="education-page" id="edu-2">
-        <h3>기업문화의 방향성</h3>
-        <p>
-          1) 정체성이란?<br>
-          (1) 동일성에 기반한 정체성<br>
-          - 환경이나 상황의 변화에도 불구하고 동일한 존재이고 싶다는 의미이다.<br>
-          - '우리다움'을 지향하는 정체성 또는 변하지 않는 정체성이다.<br>
-          (2) 자기성에 기반한 정체성<br>
-          - 나는 누구인가를 끊임없이 고민하며 스스로 변화해가는 정체성이다.<br>
-          - '나다움'을 지향하는 정체성 또는 변화하는 정체성이라고 부른다.<br><br>
-
-          2) 인공지능의 발달<br>
-          (1) 인공지능의 발달은 인간에게 편리함이라는 선물을 준다.<br>
-          (2) 미래의 인간은 무슨 일을 할 것인지에 대한 과제를 던진다.<br>
-          (3) 예술 관련 분야에서조차 인공지능이 괄목할 만한 성과를 내며 논의가 한층 심화되고 있다.<br><br>
-
-          3) 모라벡의 역설<br>
-          (1) 미국의 로봇공학자인 한스 모라벡이 주장한 것이다.<br>
-          (2) 인간에게 쉬운 일은 컴퓨터에게 어렵고, 컴퓨터에게 쉬운 일은 인간에게 어렵다는 내용이다.<br>
-          (3) 인간<br>
-          - 일상 행동은 쉽게 할 수 있다.<br>
-          - 복잡한 수식 계산, 반복적인 일을 정확하게 하는 것에는 약하다.<br>
-          (4) 인공지능이나 로봇<br>
-          - 인간이 일상적으로 하는 행동을 어려워한다.<br>
-          - 수리적 계산, 데이터 분석, 반복적 행동은 매우 쉽게 한다.<br>
-          - 컴퓨터의 성능과 기술의 발달로 모라벡의 역설이 사라질 것이라는 이야기도 있다.
-        </p>
-      </div>
-
-      <div id="education-controls">
-        <button class="edu-nav-btn" onclick="prevEdu()">이전 보기</button>
-        <button class="edu-nav-btn" onclick="nextEdu()">다음 보기</button>
-      </div>
-    </div>
-
-    <div id="pdf-actions">
-      <a href="../document/summary/01.pdf" target="_blank">
+      <div id="pdf-actions">
+        <a href="../document/summary/01.pdf" target="_blank">
         <button class="edu-nav-btn">📥 다운로드</button>
       </a>
+      </div>
     </div>
   </div>
+  <script src="../data/data.js"></script>
+  <script src="../common/js/lecture_sum.js"></script>
 
-  <script src="../common/lib/video-js/video.min.js"></script>
-  <script src="../common/js/lecture_06.js"></script>
 </body>
 </html>
