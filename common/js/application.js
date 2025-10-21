@@ -1,5 +1,6 @@
 /*
-  application.js J20250907
+  application.js J20250907 (patched for sticky activation autoplay)
+  First page (01/01) autoplay OFF
 */
 
 (() => {
@@ -11,6 +12,13 @@
   const qs = (sel, root = document) => root.querySelector(sel);
   const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const to2 = (n) => String(n).padStart(2, '0');
+
+  // Sticky activation flag (per-tab)
+  const ACT_KEY = 'app.userActivated';
+  const hasUserActivation = () => {
+    try { if (document.userActivation?.hasBeenActive) return true; } catch (_) {}
+    try { return sessionStorage.getItem(ACT_KEY) === '1'; } catch (_) { return false; }
+  };
 
   const getPathInfo = () => {
     const parts = location.pathname.split('/').filter(Boolean);
@@ -30,12 +38,14 @@
     pageInfo: null,
   };
 
+  // 첫 페이지만 자동재생 끄기
+  const isFirstPage = () => state.chapter === '01' && state.page === '01';
+  const shouldAutoplay = () => !isFirstPage();
+
   // =============================
   // Content URL resolver   
   // =============================
   function resolveContentUrl(cfg, data, chapter, page) {    //콘텐츠 URL 계산. <video> 또는 <audio> 태그 동적 삽입. 없으면 기본 규칙: {content_path}/{chapter}/{page}.{ext}
-    // You can tailor this to your actual data schema.
-    // Typical: cfg.content_path + data[chapterIndex].lecture_video.srcs[pageIndex]
     const chIndex = parseInt(chapter, 10) - 1;
     const pgIndex = parseInt(page, 10) - 1;
     const ch = Array.isArray(data) ? data[chIndex] : (data && data[chapter]);
@@ -62,10 +72,13 @@
     el.className = 'video-js vjs-default-skin';
     el.setAttribute('controls', '');
     el.setAttribute('preload', 'auto');
-    // Policy-friendly defaults: allow autoplay but start muted; user can unmute via UI. j20250907 delete muted
-    el.setAttribute('autoplay', '');
+    if (shouldAutoplay()) el.setAttribute('autoplay', ''); // 첫 페이지는 autoplay 속성 부여하지 않음
     el.setAttribute('playsinline', '');
-    // el.setAttribute('muted', '');
+    el.setAttribute('webkit-playsinline', '');
+    // 첫 제스처 전에는(그리고 자동재생을 시도할 때만) muted 부여
+    if (shouldAutoplay() && !hasUserActivation()) {
+      el.setAttribute('muted', '');
+    }
 
     // Container: create if missing
     let wrap = qs('.video-wrap');
@@ -88,8 +101,8 @@
     const options = {
       controls: true,
       preload: 'auto',
-      autoplay: true,      // actual audio autoplay depends on policy; we start muted.
-      muted: true,
+      autoplay: shouldAutoplay(),                 // 첫 페이지는 false
+      muted: shouldAutoplay() ? !hasUserActivation() : false, // 첫 페이지는 굳이 mute 필요 없음
       playsinline: true,
       controlBar: {
         volumePanel: { inline: false, vertical: true },
@@ -99,7 +112,7 @@
     };
 
     options.controlBar = Object.assign({}, options.controlBar, {       //전체화면 버튼 제거
-        fullscreenToggle: false
+      fullscreenToggle: false
     });
 
     if (!state.player) {
@@ -108,17 +121,27 @@
         // Unmute hint: allow user gesture to enable sound
         bindUnmuteOnFirstGesture(player);
         applyHashStartTime(player);
+
+        // iFrame 권한 자가진단(없는 경우 콘솔 경고만)
+        try {
+          const allows = (document.permissionsPolicy?.allowsFeature?.('autoplay')
+                       || document.featurePolicy?.allowsFeature?.('autoplay'));
+          if (allows === false) {
+            console.warn('[LMS] iframe에 allow="autoplay"가 없어 소리있는 자동재생이 제한될 수 있습니다.');
+          }
+        } catch (_) {}
       });
     } else {
-      state.player.autoplay(true);
-      state.player.muted(true);
+      state.player.autoplay(shouldAutoplay());
+      state.player.muted(shouldAutoplay() ? !hasUserActivation() : false);  // 재진입 시에도 적용
     }
   }
 
   function bindUnmuteOnFirstGesture(player) {   //첫 사용자 클릭/키 입력 이벤트 발생 시 → player.muted(false)로 자동 해제.
     const handler = () => {
-      // After first explicit user gesture in the document, we can allow sound.
+      // After first explicit user gesture in the document, allow sound and persist flag
       try { player.muted(false); } catch (_) {}
+      try { sessionStorage.setItem(ACT_KEY, '1'); } catch (_) {}
       document.removeEventListener('pointerdown', handler, true);
       document.removeEventListener('keydown', handler, true);
     };
@@ -147,8 +170,14 @@
     if (!state.player) initPlayer();
     state.player.src({ src });
     state.player.load();
-    // If MEI/gesture allows, this will play; otherwise stays paused until user interacts.
-    try { state.player.play(); } catch (_) {}
+    // 자동재생은 shouldAutoplay()일 때만 시도
+    if (shouldAutoplay()) {
+      try {
+        state.player.play().catch(() => {
+          // console.debug('[LMS] Autoplay was blocked. Waiting for a user gesture…');
+        });
+      } catch (_) {}
+    }
   }
 
   // =============================
