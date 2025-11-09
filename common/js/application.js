@@ -1,3 +1,8 @@
+/*
+  application.js J20250907 (patched for sticky activation autoplay)
+  First page (01/01) autoplay OFF
+*/
+
 (() => {
   'use strict';
 
