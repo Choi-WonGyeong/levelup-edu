@@ -1,162 +1,48 @@
-body {
+/* 기본 */
+body{
   font-family: sans-serif;
   text-align: center;
   margin: 0;
   padding: 20px;
-  background: rgb(255, 255, 255);
+  background: #fff;
 }
 
-/* .video-js {
-  width: 1024px;
-  height: 600px;
-} */
-
-/* #video-wrapper {
+/* 캔버스 1024×600 */
+.video-js{
   position: relative;
-  display: inline-block;
-} */
-
-#app-wrapper {
-  position: relative;
-  display: inline-block;
   width: 1024px;
   height: 600px;
+  background: #fff;
+  margin: 0 auto;
+  overflow: hidden;
 }
 
-#start-screen {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1024px;
-  height: 600px;
-  z-index: 11;
+/* video.js 컨트롤바 항상 표시 + 최상단 배치 */
+.video-js .vjs-control-bar{
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 3000 !important;
+}
+.video-js.vjs-user-inactive .vjs-control-bar{
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-#start-screen .start-bg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-#start-screen .start-btn {
-  position: absolute;
-  top:73%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-  width: 230px;
-}
-
-#quiz-container {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1024px;
-  height: 600px;
-  color: rgb(0, 0, 0);
-  background: url('../images/quiz/bgr.png') no-repeat center center;
-  background-size: cover;
-  z-index: 10;
-  pointer-events: auto;
-}
-
-#quiz-container.active {
-  display: block;
-}
-
-.quiz-question { /* 폰트 사이즈 및 폰트명은 추후 수정 */
-  font-size: 30px;
-  margin: 80px auto 0 auto;
-  max-width: 70%;
-  text-align: center;
-}
-
-.quiz-buttons {
-  display: flex;
-  gap: 60px;
-  position: absolute;
-  top: 37%;
-  left: 50%;
-  transform: translateX(-50%);
-  align-items: flex-end;
-}
-
-.quiz-buttons button {
-  border: none;
-  background: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-.quiz-buttons .quiz-btn-img {
-  width: 500px;
-  height: auto;
-  transition: transform 0.3s ease; /* 부드럽게 커지는 효과, 지울거면 지워도 됨*/
-  transform-origin: bottom center;
-}
-
-#btnO:hover .quiz-btn-img {
-  transform: scale(1.1);
-}
-
-#btnX:hover .quiz-btn-img {
-  transform: scale(1.1);
-}
-
-#quiz-feedback {
-  font-size: 18px;
-  margin-top: 20px;
-}
-
-#correct-overlay {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  z-index: 20;
-  pointer-events: none;
-}
-
-#correct-overlay img {
-  position: absolute;
-  width: 500px;
-  height: auto;
-  bottom: 3%; 
-  transform-origin: bottom center;
-}
-
-#correct-o {
-  left: 50%; 
-  transform: translateX(-50%) translateX(-250px);
-}
-
-#correct-x {
-  left: 50%;
-  transform: translateX(-50%) translateX(250px);
-}
-
-.vjs-custom-control {
+/* 01.html 커스텀 컨트롤 */
+.vjs-custom-control{
   font-size: 14px;
   color: white;
-  padding: 0 5px;
+  padding: 0;
   cursor: pointer;
   position: relative;
 }
-.dropdown-menu {
+.dropdown-menu{
   display: none;
   position: absolute;
   min-width: 120px;
-  bottom: 40px;
-  left: 0;
-  background: rgba(0, 0, 0, 0.2);
-  color: white;
+  bottom: 40px; left: 0;
+  background: rgba(0,0,0,0.2);
+  color: #fff;
   font-size: 13px;
   padding: 5px 0;
   border-radius: 4px;
@@ -164,12 +50,11 @@ body {
   max-height: 180px;
   overflow-y: auto;
 }
-.dropdown-menu div {
-  padding: 5px 15px;
-  cursor: pointer;
-}
-.dropdown-menu div:hover {
-  background: rgba(0, 0, 0, 0.2);
+.dropdown-menu div{ padding: 5px 15px; cursor: pointer; }
+.dropdown-menu div:hover{ background: rgba(0,0,0,0.2); }
+.download-btn{
+  width: 32px; height: 32px; padding: 0; margin: 0 4px;
+  display: flex; align-items: center; justify-content: center;
 }
 
 /* 인트로 종료 후 시작 버튼 */
@@ -243,6 +128,27 @@ body {
   object-fit: fill;
   z-index: 1010;
   pointer-events: none;
+}
+
+#next-btn{
+  display: none;
+  position: absolute;
+  right: 55px; bottom: 24px; 
+  height: 55px; width: auto; 
+  cursor: pointer;
+  z-index: 1020;
+  pointer-events: auto;
+}
+
+#result-btn{
+  display: none;
+  position: absolute;
+  left: 50%; bottom: 24px;       
+  transform: translateX(-50%);
+  height: 55px; width: auto;  
+  cursor: pointer;
+  z-index: 1020;
+  pointer-events: auto;
 }
 
 /* 결과 화면 */
