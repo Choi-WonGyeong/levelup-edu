@@ -30,12 +30,10 @@ var config = {
     // content_extension decides default file extension when resolving media url
     page_type: {
         "1": { title: "Intro", type: "", content_extension: "mp4" },
-        "2": { title: "학습내용", type: "", content_extension: "mp4" },
-        "3": { title: "학습목표", type: "", content_extension: "mp4" },
-        "4": { title: "학습하기", type: "study", content_extension: "mp4" },
-        "5": { title: "퀴즈", type: "quiz", content_extension: "mp4" },
-        "6": { title: "의견", type: "opinion", content_extension: "mp4" },
-        "7": { title: "요약", type: "summary", content_extension: "mp4" },
-        "8": { title: "Outro", type: "", content_extension: "mp4" }
+        "2": { title: "학습내용+학습목표", type: "", content_extension: "mp4" },
+        "3": { title: "학습하기", type: "study", content_extension: "mp4" },
+        "4": { title: "퀴즈", type: "quiz", content_extension: "mp4" },
+        "5": { title: "요약", type: "summary", content_extension: "mp4" },
+        "6": { title: "Outro", type: "", content_extension: "mp4" }
     }
 };
