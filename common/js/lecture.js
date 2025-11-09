@@ -1,7 +1,7 @@
 const videoEl = document.getElementById('lecture-video');
 const currentFile = location.pathname.split('/').pop(); // e.g., "01.html"
 const pageNum = parseInt(currentFile.split('.')[0]);
-const maxPage = 7;
+const maxPage = 6;
 const paddedNum = String(pageNum).padStart(2, '0');
 
 // 비디오 소스 추가
@@ -76,15 +76,15 @@ nextButton.on('click', () => {
 });
 
 // PDF 다운로드 버튼, 툴팁은 추후에 css 추가 후 수정 예정
-const downloadButton = player.controlBar.addChild('button', { name: 'DownloadButton' });
-downloadButton.addClass('vjs-custom-control');
-downloadButton.el().innerHTML = '<span title="학습 자료 다운로드">📥</span>';
-downloadButton.el().classList.add('download-btn');
+// const downloadButton = player.controlBar.addChild('button', { name: 'DownloadButton' });
+// downloadButton.addClass('vjs-custom-control');
+// downloadButton.el().innerHTML = '<span title="학습 자료 다운로드">📥</span>';
+// downloadButton.el().classList.add('download-btn');
 
-const pdfPath = `../document/summary/01.pdf`; // pdf 여기서 바꾸면 됨
-downloadButton.on('click', () => {
-  window.open(pdfPath, '_blank');
-});
+// const pdfPath = `../document/summary/01.pdf`; // pdf 여기서 바꾸면 됨
+// downloadButton.on('click', () => {
+//   window.open(pdfPath, '_blank');
+// });
 
 
 // 현재 페이지 표시
@@ -107,7 +107,7 @@ leftWrapper.appendChild(tocButton.el());
 rightWrapper.appendChild(prevButton.el());
 rightWrapper.appendChild(pageDisplay.el());
 rightWrapper.appendChild(nextButton.el());
-rightWrapper.appendChild(downloadButton.el());
+// rightWrapper.appendChild(downloadButton.el());
 
 player.ready(() => {
   const controlBar = player.controlBar.el();

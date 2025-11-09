@@ -6,7 +6,7 @@ const videoEl = document.getElementById('lecture-video');
 const currentFile = location.pathname.split('/').pop();
 const pageNum = parseInt(currentFile.split('.')[0], 10) || 5; // ex) 05.html -> 5
 const folderName = parts[parts.length - 2];    // 예: "01" (시차 폴더)
-const maxPage = 7;
+const maxPage = 6;
 const paddedNum = String(pageNum).padStart(2, '0');
 
 // =============================
@@ -99,12 +99,12 @@ nextButton.on('click', () => {
   else alert('마지막 페이지입니다.');
 });
 
-const downloadButton = player.controlBar.addChild('button', { name: 'DownloadButton' });
-downloadButton.addClass('vjs-custom-control');
-downloadButton.el().innerHTML = '<span title="학습 자료 다운로드">📥</span>';
-downloadButton.el().classList.add('download-btn');
-const pdfPath = `../document/summary/01.pdf`;
-downloadButton.on('click', () => window.open(pdfPath, '_blank'));
+// const downloadButton = player.controlBar.addChild('button', { name: 'DownloadButton' });
+// downloadButton.addClass('vjs-custom-control');
+// downloadButton.el().innerHTML = '<span title="학습 자료 다운로드">📥</span>';
+// downloadButton.el().classList.add('download-btn');
+// const pdfPath = `../document/summary/01.pdf`;
+// downloadButton.on('click', () => window.open(pdfPath, '_blank'));
 
 const pageDisplay = player.controlBar.addChild('component');
 pageDisplay.addClass('vjs-custom-control');
@@ -162,7 +162,7 @@ player.ready(() => {
   rightWrapper.appendChild(prevButton.el());
   rightWrapper.appendChild(pageDisplay.el());
   rightWrapper.appendChild(nextButton.el());
-  rightWrapper.appendChild(downloadButton.el());
+  // rightWrapper.appendChild(downloadButton.el());
 
   controlBar.insertBefore(leftWrapper, controlBar.firstChild);
   controlBar.appendChild(rightWrapper);

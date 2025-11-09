@@ -4,32 +4,32 @@ const pageNum = parseInt((currentFile || '').split('.')[0], 10);
 const paddedNum = String(pageNum).padStart(2, '0');
 const lessonNo = detectLessonNo();
 const lessonWZ = detectLessonNoWith_Zero();
-const maxPage = 7;
+const maxPage = 6;
 
 
 function detectLessonNo() {
   const path = (location.pathname || '').replace(/\\/g, '/');
   const parts = path.split('/').filter(Boolean);
 
-  // 1) URL 경로의 상위 폴더에서 1~2자리 숫자 찾기: …/02/06.html
+  // 1) 상위 폴더에서 추출
   for (let i = parts.length - 2; i >= 0; i--) {
-    if (/^\d{1,2}$/.test(parts[i])) return parseInt(parts[i], 10);
+    if (/^\d{1,2}$/.test(parts[i])) return String(parseInt(parts[i], 10)).padStart(2, '0');
   }
 
-  // 2) <body data-lesson="2"> 로 명시된 경우
+  // 2) <body data-lesson="2">
   const bodyAttr = document.body?.getAttribute('data-lesson');
-  if (bodyAttr && /^\d{1,2}$/.test(bodyAttr)) return parseInt(bodyAttr, 10);
+  if (bodyAttr && /^\d{1,2}$/.test(bodyAttr)) return String(parseInt(bodyAttr, 10)).padStart(2, '0');
 
-  // 3) 쿼리스트링 ?lesson=2 또는 해시 #lesson=2
+  // 3) ?lesson=2 또는 #lesson=2
   const qs = new URLSearchParams(location.search);
   const fromQuery = qs.get('lesson') || (location.hash.match(/lesson=(\d{1,2})/)?.[1]);
-  if (fromQuery) return parseInt(fromQuery, 10);
+  if (fromQuery) return String(parseInt(fromQuery, 10)).padStart(2, '0');
 
-  // 4) 전역 변수로 주입된 경우
-  if (typeof window.LESSON_NO === 'number') return window.LESSON_NO;
+  // 4) 전역 변수
+  if (typeof window.LESSON_NO === 'number') return String(window.LESSON_NO).padStart(2, '0');
 
-  // 5) 실패 시 기본값
-  return 1;
+  // 5) 기본값
+  return '01';
 }
 
 function detectLessonNoWith_Zero() {
@@ -65,8 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+  // console.log("lessonNo : ", lessonNo);
+
   const entry = content_data[String(lessonNo)];
   const target = document.getElementById('content-text');
+
+  // console.log("entry : ", entry);
 
   if (!target) {
     console.warn('#content-text 요소가 없습니다.');
