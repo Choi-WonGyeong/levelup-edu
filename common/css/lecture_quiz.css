@@ -195,6 +195,20 @@ body{
   pointer-events: none;
 }
 
+#explain-box{
+  position:absolute;
+  left:72px;               /* 해설 영역 시작 X */
+  top:140px;               /* 해설 영역 시작 Y */
+  width:880px;             /* 영역 폭 */
+  height:auto;
+  z-index:1025;            /* comment 이미지 위에 */
+  color:#000;
+  font-size:22px;
+  line-height:1.6;
+  text-align:left;
+  pointer-events:none;     /* 클릭 간섭 없음 */
+}
+
 /* 해설 단계에서 본문 질문은 감춤 */
 .hidden-question { visibility: hidden; }
 
