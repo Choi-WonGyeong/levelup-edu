@@ -8,21 +8,187 @@ body {
 .video-js {
   width: 1024px;
   height: 600px;
+  position: relative;
+  overflow: hidden;
 }
 
+/* 기본 컨트롤 */
 .vjs-custom-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
   font-size: 14px;
-  color: white;
-  padding: 0 0px;
+}
+
+.vjs-custom-control--menu {
+  margin-left: 16px;   /* 오른쪽으로 여유 */
+  transform: translateY(-1px); /* 세로 미세 정렬 */
+}
+
+/* 사이드 오버레이 & 시트 */
+.vjs-side-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+  z-index: 39;
+}
+.vjs-side-overlay.on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.vjs-side-sheet {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100%;
+  background: #fff;
+  border: 2px solid #ffc595ff;
+  border-left: 6px solid #f0a66a;
+  box-shadow: 0 4px 20px rgba(0,0,0,.08);
+  transform: translateX(-100%);
+  transition: transform .25s ease;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  visibility: hidden;
+}
+.vjs-side-sheet.on {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+/* 시트 헤더 */
+.vjs-sheet-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 14px 16px 8px 25px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #222;
+}
+.vjs-sheet-header .title {
+  letter-spacing: -.3px;
+  display: inline-block;
+  transform: translateY(15px);
+}
+.vjs-sheet-header .underline {
+  position: absolute;
+  left: -1px;
+  right: 14px;
+  bottom: 0;
+  height: 6px;
+  background: #f0a66a;
+  border-radius: 2px;
+}
+
+/* 닫기 버튼 */
+.vjs-close-btn {
+  margin-left: auto;
+  background: #9aa0a6 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 45%;
+  width: 30px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
+  appearance: none;
+  line-height: 1;
+  transform: translateY(5px);
+}
+
+/* 시트 본문 */
+.vjs-sheet-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 8px 10px 8px;
+}
+
+/* 항목 */
+.vjs-sheet-item {
+  position: relative;
+  margin: 4px 6px;
+  padding: 6px 8px 8px 14px;
+  cursor: pointer;
+  color: #222;
+  border-radius: 6px;
+}
+.vjs-sheet-item .txt {
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+.vjs-sheet-item .line {
+  margin-top: 6px;
+  margin-left: -10px;
+  width: 90px;
+  height: 4px;
+  background: #ffc595ff;
+  border-radius: 2px;
+}
+.vjs-sheet-item:hover {
+  background: #fff3e1;
+}
+
+/* 학습자료 섹션 */
+.vjs-section-title {
+  margin: 12px 6px 8px 6px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #222;
   position: relative;
 }
+.vjs-section-title .u {
+  display: block;
+  margin-top: 4px;
+  margin-left: -6px;
+  width: calc(100% + 14px);
+  height: 5px;
+  background: #f0a66a;
+  border-radius: 2px;
+}
 
+/* 링크 */
+.vjs-sheet-link {
+  color: #0b63bd;
+  text-decoration: none;
+  font-size: 15px;
+}
+.vjs-sheet-link:hover {
+  text-decoration: underline;
+}
+
+/* 푸터 */
+.vjs-sheet-footer {
+  padding: 8px 10px 12px 10px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+.vjs-sheet-footer img {
+  height: 75px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* 다운로드 버튼 */
 .download-btn {
   width: 32px;
   height: 32px;
-  padding: 0;
-  margin: 0 4px;
   display: flex;
   align-items: center;
   justify-content: center;
