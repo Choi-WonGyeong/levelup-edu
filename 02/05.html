@@ -2,11 +2,17 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>차시 강의</title>
-  <link href="../common/css/lecture_sum.css" rel="stylesheet" />
+  <title>요약 강의</title>
+  
+  <link rel="stylesheet" href="../common/lib/video-js/video-js.css" />
+
+  <link rel="stylesheet" href="../common/css/lecture_sum.css" />
 </head>
+
 <body>
+
   <div id="wrapper">
+
     <img src="../common/images/summary/bg.png" id="bg-img" />
 
     <div id="content-screen">
@@ -14,14 +20,33 @@
       <div id="content-text"></div>
 
       <div id="pdf-actions">
-        <a href="../document/summary/01.pdf" target="_blank">
-        <button class="edu-nav-btn">📥 다운로드</button>
-      </a>
+        <a id="summary-pdf" href="../document/summary/01.pdf" target="_blank">
+          <button class="edu-nav-btn">📥 다운로드</button>
+        </a>
       </div>
     </div>
+
+    <div class="video-wrap">
+      <video
+        id="player"
+        class="video-js vjs-default-skin"
+        playsinline
+        webkit-playsinline
+        preload="auto"
+      >
+        <source src="../content/summary.mp3" type="audio/mp3" />
+      </video>
+    </div>
+
   </div>
+
+
+  <script src="../common/lib/video-js/video.js"></script>
+
+  <script src="../common/js/module_video.js"></script>
+
   <script src="../data/data.js"></script>
-  <script src="../data/config.js"></script>
+
   <script src="../common/js/lecture_sum.js"></script>
 
 </body>

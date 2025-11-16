@@ -2,9 +2,11 @@ body {
   margin: 0;
   padding: 0;
   background: #ffffff;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   height: 100vh;
 }
 
@@ -28,6 +30,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 95%;
+  z-index: 50;
 }
 
 #content-img {
@@ -42,28 +45,28 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
+
   padding: 20px;
   padding-left: 50px;
+
   box-sizing: border-box;
   color: #000;
   font-size: 16px;
-  text-align: left;
   line-height: 1.5;
+
   overflow-y: scroll;
   scrollbar-width: none;
 }
 
-#context-text::-webkit-scrollbar{
-display: none;
+#content-text::-webkit-scrollbar {
+  display: none;
 }
-
 
 #pdf-actions {
   position: absolute;
   top: 3%;
   right: 5%;
 }
-
 
 .edu-nav-btn {
   background-color: #929292;
@@ -73,4 +76,12 @@ display: none;
   cursor: pointer;
   font-size: 14px;
   border-radius: 4px;
+}
+
+.video-wrap {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 60;
 }
