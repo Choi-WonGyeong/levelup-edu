@@ -37,26 +37,7 @@ body{
   cursor: pointer;
   position: relative;
 }
-.dropdown-menu{
-  display: none;
-  position: absolute;
-  min-width: 120px;
-  bottom: 40px; left: 0;
-  background: rgba(0,0,0,0.2);
-  color: #fff;
-  font-size: 13px;
-  padding: 5px 0;
-  border-radius: 4px;
-  z-index: 9999;
-  max-height: 180px;
-  overflow-y: auto;
-}
-.dropdown-menu div{ padding: 5px 15px; cursor: pointer; }
-.dropdown-menu div:hover{ background: rgba(0,0,0,0.2); }
-.download-btn{
-  width: 32px; height: 32px; padding: 0; margin: 0 4px;
-  display: flex; align-items: center; justify-content: center;
-}
+
 
 /* 인트로 종료 후 시작 버튼 */
 #start-btn{
@@ -75,7 +56,7 @@ body{
   display: none;
   position: absolute;
   left: 0; top: 0;
-  width: 1024px; height: 600px;
+  width: 1024px; height: 580px;
   color: #000;
   background: #fff url('../images/quiz/bgr.png') no-repeat center center;
   background-size: cover;
@@ -125,7 +106,7 @@ body{
   display: none;
   position: absolute;
   left: 0; top: 0;
-  width: 1024px; height: 600px;
+  width: 1024px; height: 580px;
   object-fit: fill;
   z-index: 1010;
   pointer-events: none;
@@ -157,7 +138,7 @@ body{
   display: none;
   position: absolute;
   left: 0; top: 0;
-  width: 1024px; height: 600px;
+  width: 1024px; height: 580px;
   color: #000;
   background: #fff url('../images/quiz/result_bgr.png') no-repeat center center;
   background-size: cover;
