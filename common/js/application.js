@@ -39,7 +39,7 @@
   };
 
   // 첫 페이지만 자동재생 끄기
-  const isFirstPage = () => state.chapter === '01' && state.page === '01';
+  const isFirstPage = () => state.page === '01';
   const shouldAutoplay = () => !isFirstPage();
 
   // =============================
@@ -130,6 +130,12 @@
             console.warn('[LMS] iframe에 allow="autoplay"가 없어 소리있는 자동재생이 제한될 수 있습니다.');
           }
         } catch (_) {}
+        try{
+          player.addClass('vjs-has-started');   // 재생 전이라도 '시작됨' 상태로 처리
+          player.userActive(true);              // 사용자 활성 상태
+          player.controlBar.show();             // 컨트롤바 강제 표시
+          player.inactivityTimeout(0);          // 자동 숨김 방지
+        } catch (e) {}
       });
     } else {
       state.player.autoplay(shouldAutoplay());
