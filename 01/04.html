@@ -1,47 +1,136 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-  <meta charset="UTF-8" />
-  <title>차시 강의</title>
-  <link href="../common/lib/video-js/video-js.css" rel="stylesheet" />
-  <link href="../common/css/lecture_quiz.css" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style></style>
+    <script src="../common/lib/fontawesome/all.min.js"></script>
+    <script src="../common/lib/screenfull.js"></script>
+    <link rel="stylesheet" href="../common/lib/video-js/video-js.css" />
+    <link rel="stylesheet" href="../common/lib/bulma-0.8.0/bulma.css" />
+    <link rel="stylesheet" href="../common/lib/animate.css" />
+    <link rel="stylesheet" href="../common/lib/video-overlay.css" />
+    <link rel="stylesheet" href="../common/css/font.css" />
+    <link rel="stylesheet" href="../common/css/style.css" />
+    <link rel="stylesheet" href="../common/css/opinion.css" />
+    <link rel="stylesheet" href="../common/css/quiz.css" />
+    <link rel="stylesheet" href="../common/css/summary.css" />
+    <!-- 🔹 퀴즈 전용 CSS 추가 -->
+    <link rel="stylesheet" href="../common/css/lecture_quiz.css" />
+    <style></style>
 </head>
+
 <body>
+    <main>
+        <aside class="menu is-scrollable" id="side-menu">
+            <div class="side-menu-inner-wrap">
+                <div class="menu-title">
+                    <h3>목차</h3>
 
-  <!-- 01.html과 동일한 video.js 플레이어 -->
-  <video id="lecture-video" class="video-js vjs-default-skin" controls preload="auto"></video>
+                    <button class="button is-danger is-small is-outlined" type="button" onclick="closeNav()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <button id="index-btn-competency-test" class="button is-small is-outlined modal-button"
+                        data-target="modal-competency-test" type="button" onclick="">
+                        역량진단
+                    </button>
+                </div>
 
-  <!-- 인트로 종료 후 뜨는 시작 버튼(영상 위 오버레이) -->
-  <img id="start-btn" src="../common/images/quiz/start.png" alt="시작" onclick="startQuiz()" style="display:none;" />
+                <div class="menu-content-wrap"></div>
+            </div>
+        </aside>
 
-  <!-- 퀴즈 영역(영상 위 오버레이) -->
-  <div id="quiz-container">
-    <div class="quiz-question" id="quiz-question"></div>
-    <div class="quiz-buttons">
-      <button id="btnO"><img src="../common/images/quiz/o.png" alt="O" class="quiz-btn-img"></button>
-      <button id="btnX"><img src="../common/images/quiz/x.png" alt="X" class="quiz-btn-img"></button>
+        <!-- 🔹 01.html의 video-wrap을 퀴즈용 플레이어로 교체 -->
+        <div class="video-wrap">
+            <video id="lecture-video" class="video-js vjs-default-skin" controls preload="auto"></video>
+        </div>
+
+        <div id="modal-map" class="modal custom-modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div id="map-chapter-list" class="box"></div>
+            </div>
+            <button class="modal-close is-large" aria-label="close"></button>
+        </div>
+        <div id="modal-competency-test" class="modal custom-modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="box">
+                    <button class="button is-link" id="competency-test">역량진단 바로가기</button>
+                </div>
+            </div>
+            <button class="modal-close is-large" aria-label="close"></button>
+        </div>
+        <div id="modal-opinion" class="modal custom-modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <!-- content -->
+                <div id="opinion-modal-content" class="box">
+                    <p>modal content here</p>
+                </div>
+                <!-- end content -->
+            </div>
+            <button class="modal-close is-large" aria-label="close"></button>
+        </div>
+        <div id="modal-opinion-alert" class="modal custom-modal">
+            <div class="modal-background"></div>
+            <div class="modal-content is-huge has-text-centered">
+                <div class="modal-content">
+                    <div class="box is-flex">
+                        <p class="comment"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 🔹 04_.html의 퀴즈 오버레이 그대로 추가 -->
+    <!-- 인트로 종료 후 뜨는 시작 버튼(영상 위 오버레이) -->
+    <img id="start-btn" src="../common/images/quiz/start.png" alt="시작" onclick="startQuiz()" style="display:none;" />
+
+    <!-- 퀴즈 영역(영상 위 오버레이) -->
+    <div id="quiz-container">
+        <div class="quiz-question" id="quiz-question"></div>
+        <div class="quiz-buttons">
+            <button id="btnO">
+                <img src="../common/images/quiz/o.png" alt="O" class="quiz-btn-img">
+            </button>
+            <button id="btnX">
+                <img src="../common/images/quiz/x.png" alt="X" class="quiz-btn-img">
+            </button>
+        </div>
+        <div id="quiz-feedback"></div>
+
+        <div id="correct-overlay">
+            <img id="correct-o" src="../common/images/quiz/correct_o.png" alt="correct O" />
+            <img id="correct-x" src="../common/images/quiz/correct_x.png" alt="correct X" />
+        </div>
     </div>
-    <div id="quiz-feedback"></div>
 
-    <div id="correct-overlay">
-      <img id="correct-o" src="../common/images/quiz/correct_o.png" alt="correct O" />
-      <img id="correct-x" src="../common/images/quiz/correct_x.png" alt="correct X" />
+    <div id="quiz-result" style="display:none;">
+        <h2 id="result-title">결과 확인</h2>
+        <p id="result-score">총 3문항 중 0문항을 맞히셨습니다.</p>
+        <img id="retry-btn" src="../common/images/quiz/again.png" alt="다시 풀기" />
+        <p id="result-note">
+            본 퀴즈는 평가에 반영되지 않습니다.<br>
+            학습 이해를 돕기 위한 활동입니다.
+        </p>
     </div>
-  </div>
 
-  <div id="quiz-result" style="display:none;">
-    <h2 id="result-title">결과 확인</h2>
-    <p id="result-score">총 3문항 중 0문항을 맞히셨습니다.</p>
-    <img id="retry-btn" src="../common/images/quiz/again.png" alt="다시 풀기" />
-    <p id="result-note">
-      본 퀴즈는 평가에 반영되지 않습니다.<br>
-      학습 이해를 돕기 위한 활동입니다.
-    </p>
-  </div>
+    <!-- 🔹 이 페이지에서는 autoplay / summary / 기존 quiz.js 안 씀 -->
+    <!-- 필요한 최소 스크립트만 사용 -->
+    <script src="../common/lib/es6-promise.min.js"></script>
+    <script src="../common/lib/es6-promise.auto.min.js"></script>
+    <script src="../common/lib/js.cookie-2.2.1.min.js"></script>
 
-  <script src="../common/lib/video-js/video.min.js"></script>
-  <script src="../data/data.js"></script>
-  <script src="../data/config.js"></script>
-  <script src="../common/js/lecture_quiz.js"></script>
+    <script src="../common/lib/video-js/video.js"></script>
+    <script src="../data/data.js"></script>
+    <script src="../data/config.js"></script>
+    <!-- <script src="../common/js/module_video.js"></script> -->
+    <script src="../common/js/lecture_quiz.js"></script>
 </body>
+
 </html>

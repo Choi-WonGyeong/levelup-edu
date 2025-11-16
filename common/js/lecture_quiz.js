@@ -66,10 +66,10 @@ function ensureStyles(){
   const css =
     '.vjs-sheet-item .txt { text-align: left; }' +
     '.vjs-custom-control{display:flex;align-items:center;gap:8px;color:#fff;font-size:14px;}' +
-    '.vjs-side-overlay{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:39;}' +
-    '.vjs-side-overlay.on{opacity:1;pointer-events:auto;}' +
-    '.vjs-side-sheet{position:absolute;top:0;left:0;width:220px;height:100%;background:#fff;border:2px solid #ffc595ff;border-left:6px solid #f0a66a;box-shadow:0 4px 20px rgba(0,0,0,.08);transform:translateX(-100%);transition:transform .25s ease;z-index:40;display:flex;flex-direction:column;overflow:hidden;}' +
-    '.vjs-side-sheet.on{transform:translateX(0);}' +
+    '.vjs-side-overlay{position:absolute;height:590px;top:0px;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:99998;}'+
+    '.vjs-side-overlay.on{opacity:1;pointer-events:auto;}'+
+    '.vjs-side-sheet{position:absolute;top:0;left:0;width:220px;height:590px;background:#fff;border:2px solid #ffc595ff;border-left:6px solid #f0a66a;box-shadow:0 4px 20px rgba(0,0,0,.08);transform:translateX(-100%);transition:transform .25s ease;z-index:99999;display:flex;flex-direction:column;overflow:hidden;}'+
+    '.vjs-side-sheet.on{transform:translateX(0);}'+
     '.vjs-sheet-header{position:relative;display:flex;align-items:center;justify-content:flex-start;gap:8px;padding:14px 16px 8px 25px;font-size:18px;font-weight:800;color:#222;}' +
     '.vjs-sheet-header .title{letter-spacing:-.3px; display:inline-block;}' +
     '.vjs-sheet-header .title {' +
@@ -212,24 +212,32 @@ if (window.config && window.config.page_type) {
 
 // ===== Prev / Next / Page 표시 =====
 const prevButton = player.controlBar.addChild('button',{name:'PrevButton'});
-prevButton.addClass('vjs-custom-control');
+// prevButton.addClass('vjs-custom-control');
+prevButton.addClass('mv-prev-btn');   // ← 추가
 prevButton.el().innerHTML = '◀';
 prevButton.on('click',()=>{
   if (pageNum>1) location.href=`${String(pageNum-1).padStart(2,'0')}.html`;
   else alert('처음 페이지입니다.');
 });
+prevButton.el().style.marginRight = '2px';
 
 const nextButton = player.controlBar.addChild('button',{name:'NextButton'});
-nextButton.addClass('vjs-custom-control');
+// nextButton.addClass('vjs-custom-control');
+nextButton.addClass('mv-next-btn');   // ← 추가
 nextButton.el().innerHTML = '▶';
 nextButton.on('click',()=>{
   if (pageNum<maxPage) location.href=`${String(pageNum+1).padStart(2,'0')}.html`;
   else alert('마지막 페이지입니다.');
 });
+nextButton.el().style.marginLeft  = '1px';
+nextButton.el().style.marginRight = '12px';   // ← 여기 숫자 조절하면서 보기
 
 const pageDisplay = player.controlBar.addChild('component');
-pageDisplay.addClass('vjs-custom-control');
+// pageDisplay.addClass('vjs-custom-control');
+pageDisplay.addClass('mv-page-display');   // ← 선택 사항, 필요하면 추가
 pageDisplay.el().innerText = `${paddedNum}/${String(maxPage).padStart(2,'0')}`;
+pageDisplay.el().style.marginLeft = '1px';
+pageDisplay.el().style.marginRight = '1px';
 
 // ===== 컨트롤바 배치 =====
 player.ready(()=>{
@@ -244,6 +252,8 @@ player.ready(()=>{
   rightWrap.style.display='flex';
   rightWrap.style.alignItems='center';
   rightWrap.style.marginLeft='auto';
+  rightWrap.style.paddingRight = '10px';
+  rightWrap.style.gap = '0px';
   rightWrap.appendChild(prevButton.el());
   rightWrap.appendChild(pageDisplay.el());
   rightWrap.appendChild(nextButton.el());
@@ -375,3 +385,38 @@ window.addEventListener('DOMContentLoaded',()=>{
   nextImgBtn.addEventListener('click',goNext);
   resultImgBtn.addEventListener('click',()=>{exitOverlayModes();showResult();});
 });
+
+// =============================
+// 04.html 전용 autoplay unlock
+// =============================
+function autoplayUnlock() {
+    const video = document.getElementById('lecture-video');
+
+    // videojs 플레이어가 생성될 때까지 기다림
+    function wait() {
+        if (!video || !video.player) {
+            return setTimeout(wait, 100);
+        }
+
+        // video.js player 객체
+        const player = video.player;
+
+        // autoplay unlock: mute → play() → 성공 시 신뢰획득
+        player.muted(true);
+
+        const p = player.play();
+        if (p && typeof p.then === 'function') {
+            p.then(() => {
+                console.log("Autoplay unlock success");
+                player.muted(false); // 필요하면 이후 unmute
+            }).catch(err => {
+                console.warn("Autoplay unlock failed:", err);
+            });
+        }
+    }
+
+    wait();
+}
+
+// 페이지 로드 후 자동 실행
+document.addEventListener("DOMContentLoaded", autoplayUnlock);

@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="../common/css/opinion.css" />
     <link rel="stylesheet" href="../common/css/quiz.css" />
     <link rel="stylesheet" href="../common/css/summary.css" />
+    <!-- 🔹 퀴즈 전용 CSS 추가 -->
+    <link rel="stylesheet" href="../common/css/lecture_quiz.css" />
     <style></style>
 </head>
 
@@ -40,9 +42,10 @@
                 <div class="menu-content-wrap"></div>
             </div>
         </aside>
+
+        <!-- 🔹 01.html의 video-wrap을 퀴즈용 플레이어로 교체 -->
         <div class="video-wrap">
-            <div class="video-dim is-overlay"></div>
-            <div class="content-wrap"></div>
+            <video id="lecture-video" class="video-js vjs-default-skin" controls preload="auto"></video>
         </div>
 
         <div id="modal-map" class="modal custom-modal">
@@ -55,7 +58,8 @@
         <div id="modal-competency-test" class="modal custom-modal">
             <div class="modal-background"></div>
             <div class="modal-content">
-                <div class="box"><button class="button is-link" id="competency-test">역량진단 바로가기</button>
+                <div class="box">
+                    <button class="button is-link" id="competency-test">역량진단 바로가기</button>
                 </div>
             </div>
             <button class="modal-close is-large" aria-label="close"></button>
@@ -83,21 +87,50 @@
         </div>
     </main>
 
-    <!-- Minified version of `es6-promise-auto` below. -->
+    <!-- 🔹 04_.html의 퀴즈 오버레이 그대로 추가 -->
+    <!-- 인트로 종료 후 뜨는 시작 버튼(영상 위 오버레이) -->
+    <img id="start-btn" src="../common/images/quiz/start.png" alt="시작" onclick="startQuiz()" style="display:none;" />
+
+    <!-- 퀴즈 영역(영상 위 오버레이) -->
+    <div id="quiz-container">
+        <div class="quiz-question" id="quiz-question"></div>
+        <div class="quiz-buttons">
+            <button id="btnO">
+                <img src="../common/images/quiz/o.png" alt="O" class="quiz-btn-img">
+            </button>
+            <button id="btnX">
+                <img src="../common/images/quiz/x.png" alt="X" class="quiz-btn-img">
+            </button>
+        </div>
+        <div id="quiz-feedback"></div>
+
+        <div id="correct-overlay">
+            <img id="correct-o" src="../common/images/quiz/correct_o.png" alt="correct O" />
+            <img id="correct-x" src="../common/images/quiz/correct_x.png" alt="correct X" />
+        </div>
+    </div>
+
+    <div id="quiz-result" style="display:none;">
+        <h2 id="result-title">결과 확인</h2>
+        <p id="result-score">총 3문항 중 0문항을 맞히셨습니다.</p>
+        <img id="retry-btn" src="../common/images/quiz/again.png" alt="다시 풀기" />
+        <p id="result-note">
+            본 퀴즈는 평가에 반영되지 않습니다.<br>
+            학습 이해를 돕기 위한 활동입니다.
+        </p>
+    </div>
+
+    <!-- 🔹 이 페이지에서는 autoplay / summary / 기존 quiz.js 안 씀 -->
+    <!-- 필요한 최소 스크립트만 사용 -->
     <script src="../common/lib/es6-promise.min.js"></script>
     <script src="../common/lib/es6-promise.auto.min.js"></script>
-
     <script src="../common/lib/js.cookie-2.2.1.min.js"></script>
 
-    <script src="../data/config.js"></script>
-    <script src="../data/data.js"></script>
-    <script src="../common/js/content_init.js"></script>
-    <script src="../common/lib/jquery/jquery.min.js"></script>
     <script src="../common/lib/video-js/video.js"></script>
-    <script src="../common/js/module_video.js"></script>
-    <script src="../common/js/application.js"></script>
-    <script src="../common/js/quiz.js"></script>
-    <script src="../common/js/summary.js"></script>
+    <script src="../data/data.js"></script>
+    <script src="../data/config.js"></script>
+    <!-- <script src="../common/js/module_video.js"></script> -->
+    <script src="../common/js/lecture_quiz.js"></script>
 </body>
 
 </html>

@@ -3,12 +3,13 @@ body{
   font-family: sans-serif;
   text-align: center;
   margin: 0;
-  padding: 20px;
+  padding: 00px;
   background: #fff;
 }
 
 /* 캔버스 1024×600 */
 .video-js{
+  transform: translateY(-15px);
   position: relative;
   width: 1024px;
   height: 600px;
@@ -214,3 +215,30 @@ body{
 
 /* 판정 단계에서만 질문 흐리게 */
 .dim-question { color:#666 !important; opacity:.5; filter:grayscale(100%); }
+
+/* video.js 기본 버튼 폭 강제 무시 */
+.video-js .vjs-control.vjs-button {
+    min-width: auto !important;
+    width: 40px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
+}
+
+.vjs-control-bar .mv-next-btn { 
+  margin-left: 1px !important; 
+  /* padding-right:12px !important;
+  gap: 2px !important; */
+}
+.vjs-control-bar .mv-prev-btn { 
+  margin-right: 1px !important; 
+}
+.vjs-control-bar .mv-page-display { 
+  margin: 0 1px !important; 
+}
+
+/* 컨트롤바를 영상 바로 아래로 붙임 */
+.video-js .vjs-control-bar {
+    bottom: 12px !important;
+    position: absolute !important;
+}

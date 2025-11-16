@@ -3,42 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <title>차시 강의</title>
-  <link href="../common/lib/video-js/video-js.css" rel="stylesheet" />
-  <link href="../common/css/lecture_quiz.css" rel="stylesheet" />
+  <link href="../common/css/lecture_sum.css" rel="stylesheet" />
 </head>
 <body>
-  <div id="app-wrapper">
-  <!-- <div id="video-wrapper">
-    <video id="lecture-video"
-           class="video-js vjs-default-skin"
-           controls
-           preload="auto"
-           poster="../common/test_images/background.jpg">
-    </video> -->
-    <div id="start-screen">
-      <img src="../common/images/quiz/startscreen.png" class="start-bg" />
-      <img src="../common/images/quiz/start.png" class="start-btn" onclick="startQuiz()" />
-    </div>
+  <div id="wrapper">
+    <img src="../common/images/summary/bg.png" id="bg-img" />
 
-    <div id="quiz-container">
-      <div class="quiz-question" id="quiz-question"></div>
-      <div class="quiz-buttons">
-        <button id="btnO"><img src="../common/images/quiz/o.png" alt="O" class="quiz-btn-img"></button>
-        <button id="btnX"><img src="../common/images/quiz/x.png" alt="X" class="quiz-btn-img"></button>
+    <div id="content-screen">
+      <img src="../common/images/summary/content.png" id="content-img" />
+      <div id="content-text"></div>
+
+      <div id="pdf-actions">
+        <a href="../document/summary/01.pdf" target="_blank">
+        <button class="edu-nav-btn">📥 다운로드</button>
+      </a>
       </div>
-      <div id="quiz-feedback"></div>
-
-      <div id="correct-overlay">
-        <img id="correct-o" src="../common/images/quiz/correct_o.png" alt="correct O" />
-        <img id="correct-x" src="../common/images/quiz/correct_x.png" alt="correct X" />
-      </div>
-
-
     </div>
-
   </div>
+  <script src="../data/data.js"></script>
+  <script src="../data/config.js"></script>
+  <script src="../common/js/lecture_sum.js"></script>
 
-  <script src="../common/lib/video-js/video.min.js"></script>
-  <script src="../common/js/lecture_quiz.js"></script>
 </body>
 </html>
