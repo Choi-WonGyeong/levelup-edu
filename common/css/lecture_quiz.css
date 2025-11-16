@@ -86,13 +86,15 @@ body{
   display: flex;
   gap: 60px;
   position: absolute;
-  left: 50%; top: 37%;
+  left: 50%; top: 30%;
   transform: translateX(-50%);
   align-items: flex-end;
+  width: 100% !important;
 }
 .quiz-buttons button{ border:none; background:none; cursor:pointer; padding:0; }
 .quiz-buttons .quiz-btn-img{
-  width: 500px; height: auto;
+  width: 500px !important; 
+  height: auto !important;
   transition: transform .3s ease; transform-origin: bottom center;
 }
 #btnO:hover .quiz-btn-img, #btnX:hover .quiz-btn-img{ transform: scale(1.1); }
@@ -156,7 +158,7 @@ body{
 .highlight{ color: rgb(255,166,0); }
 #retry-btn{ display: block; margin: 400px auto 0 auto; cursor: pointer; height: 60px; }
 #result-note{
-  position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%);
+  position: absolute; left: 50%; bottom: 30px; transform: translateX(-50%);
   font-size: 16px; text-align: center; line-height: .7; white-space: pre-line;
 }
 

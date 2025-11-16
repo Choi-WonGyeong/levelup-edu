@@ -385,6 +385,22 @@ window.addEventListener('DOMContentLoaded',()=>{
   nextImgBtn.addEventListener('click',goNext);
   resultImgBtn.addEventListener('click',()=>{exitOverlayModes();showResult();});
 });
+window.addEventListener('load', () => {
+  document.querySelectorAll('#quiz-container .quiz-btn-img').forEach(img => {
+    // width/height 강제
+    img.style.setProperty('width', '500px', 'important');
+    img.style.setProperty('height', 'auto', 'important');
+    img.style.display = 'block';
+
+    // 혹시 flex/부모 영향 줄이기
+    const parentBtn = img.closest('button');
+    if (parentBtn) {
+      parentBtn.style.width = 'auto';
+      parentBtn.style.height = 'auto';
+      parentBtn.style.padding = '0';
+    }
+  });
+});
 
 // =============================
 // 04.html 전용 autoplay unlock
