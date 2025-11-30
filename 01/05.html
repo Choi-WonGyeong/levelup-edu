@@ -2,24 +2,72 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>차시 강의</title>
+  <title>summary - 강의 오버레이형</title>
+
   <link href="../common/css/lecture_sum.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../common/lib/video-js/video-js.css" />
+  <script src="../common/lib/video-js/video.js"></script>
+
+  <style>
+    /* 2) 화면 오버레이 형태 */
+    .video-js {
+      position: absolute !important;
+      bottom: 58px;      /* summary 위에 올릴 높이 */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1024px !important;
+      height: 600px !important;
+      z-index: 9999;
+      background: transparent !important;
+    }
+
+    .vjs-control-bar {
+      height: 30px !important;
+    }
+    /* 사이드바 기본: 화면 왼쪽 밖에 숨기기 */
+.vjs-side-sheet {
+  position: absolute !important;
+  overflow: hidden;
+  top: 0;
+  transition: left 0.3s ease;
+  z-index: 10000;
+}
+
+/* on 클래스일 때 화면 안으로 들어오기 */
+.vjs-side-sheet.on {
+  left: 0 !important;
+}
+
+  </style>
 </head>
+
 <body>
+
+  <!-- summary layout -->
   <div id="wrapper">
     <img src="../common/images/summary/bg.png" id="bg-img" />
-
     <div id="content-screen">
       <img src="../common/images/summary/content.png" id="content-img" />
       <div id="content-text"></div>
-
       <div id="pdf-actions">
         <a href="../document/summary/01.pdf" target="_blank">
-        <button class="edu-nav-btn">📥 다운로드</button>
-      </a>
+          <button class="edu-nav-btn">📥 다운로드</button>
+        </a>
       </div>
     </div>
   </div>
+
+  <!-- video.js 플레이어 -->
+  <video id="player" class="video-js vjs-default-skin" controls preload="auto">
+    <source src="../content/summary.mp3" type="audio/mp3" />
+  </video>
+
+  <script>
+    var player = videojs('player');
+  </script>
+
+  <script src="../common/js/module_video.js"></script>
+
   <script src="../data/data.js"></script>
   <script src="../data/config.js"></script>
   <script src="../common/js/lecture_sum.js"></script>
