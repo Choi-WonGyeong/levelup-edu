@@ -1,28 +1,158 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-  <meta charset="UTF-8" />
-  <title>차시 강의</title>
-  <link href="../common/css/lecture_sum.css" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Summary</title>
+
+    <script src="../common/lib/fontawesome/all.min.js"></script>
+    <script src="../common/lib/screenfull.js"></script>
+    <link rel="stylesheet" href="../common/lib/video-js/video-js.css" />
+    <link rel="stylesheet" href="../common/lib/bulma-0.8.0/bulma.css" />
+    <link rel="stylesheet" href="../common/lib/animate.css" />
+    <link rel="stylesheet" href="../common/lib/video-overlay.css" />
+    <link rel="stylesheet" href="../common/css/font.css" />
+    <link rel="stylesheet" href="../common/css/style.css" />
+    <link rel="stylesheet" href="../common/css/summary.css" />
+
+    <!-- summary 전용 -->
+    <style>
+        .video-wrap {
+            width: 1010px;
+            height: 568px;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .summary-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1010px;
+            height: 568px;
+            background: url("../common/images/summary/bg.png") no-repeat center/cover;
+            z-index: 1;
+        }
+        #content-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            z-index: 2;
+            pointer-events: none;
+            }
+
+        #content-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+
+        .video-js,
+        #player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1010px !important;
+            height: 568px !important;
+            z-index: 3;
+            background: transparent !important;
+        }
+    </style>
 </head>
+
 <body>
-  <div id="wrapper">
-    <img src="../common/images/summary/bg.png" id="bg-img" />
+    <main>
+        <aside class="menu is-scrollable" id="side-menu">
+            <div class="side-menu-inner-wrap">
+                <div class="menu-title">
+                    <h3>목차</h3>
+                    <button class="button is-danger is-small is-outlined" type="button" onclick="closeNav()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <button id="index-btn-competency-test" class="button is-small is-outlined modal-button" data-target="modal-competency-test">
+                        역량진단
+                    </button>
+                </div>
+                <div class="menu-content-wrap"></div>
+            </div>
+        </aside>
 
-    <div id="content-screen">
-      <img src="../common/images/summary/content.png" id="content-img" />
-      <div id="content-text"></div>
+        <div class="video-wrap">
+            <div class="video-dim is-overlay"></div>
+            <div class="summary-bg"></div>
+            <video id="player" class="video-js vjs-default-skin" controls preload="auto"></video>
 
-      <div id="pdf-actions">
-        <a href="../document/summary/01.pdf" target="_blank">
-        <button class="edu-nav-btn">📥 다운로드</button>
-      </a>
-      </div>
-    </div>
-  </div>
-  <script src="../data/data.js"></script>
-  <script src="../data/config.js"></script>
-  <script src="../common/js/lecture_sum.js"></script>
+            <div id="content-screen">
+                <img id="content-img" src="../common/images/summary/content.png">
+            </div>
+        </div>
+
+        <div id="modal-map" class="modal custom-modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div id="map-chapter-list" class="box"></div>
+            </div>
+            <button class="modal-close is-large"></button>
+        </div>
+
+        <div id="modal-competency-test" class="modal custom-modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="box">
+                    <button class="button is-link" id="competency-test">역량진단 바로가기</button>
+                </div>
+            </div>
+            <button class="modal-close is-large"></button>
+        </div>
+
+        <div id="modal-opinion" class="modal custom-modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div id="opinion-modal-content" class="box"></div>
+            </div>
+            <button class="modal-close is-large"></button>
+        </div>
+
+        <div id="modal-opinion-alert" class="modal custom-modal">
+            <div class="modal-background"></div>
+            <div class="modal-content is-huge has-text-centered">
+                <div class="modal-content">
+                    <div class="box is-flex">
+                        <p class="comment"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <script src="../common/lib/es6-promise.min.js"></script>
+    <script src="../common/lib/es6-promise.auto.min.js"></script>
+
+    <script src="../common/lib/js.cookie-2.2.1.min.js"></script>
+
+    <script src="../data/config.js"></script>
+    <script src="../data/data.js"></script>
+    <script src="../common/js/content_init.js"></script>
+    <script src="../common/lib/jquery/jquery.min.js"></script>
+    <script src="../common/lib/video-js/video.js"></script>
+
+    <script src="../common/js/module_video.js"></script>
+
+    <script src="../common/js/application.js"></script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const player = videojs("player");
+        player.src({ src: "../content/summary.mp3", type: "audio/mp3" });
+    });
+    </script>
 
 </body>
+
 </html>

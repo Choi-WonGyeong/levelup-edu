@@ -33,7 +33,7 @@ var config = {
         "2": { title: "학습내용+학습목표", type: "", content_extension: "mp4" },
         "3": { title: "학습하기", type: "study", content_extension: "mp4" },
         "4": { title: "퀴즈", type: "quiz", content_extension: "mp4" },
-        "5": { title: "요약", type: "summary", content_extension: "mp4" },
+        "5": { title: "요약", type: "summary", content_extension: "mp3", src: "../content/summary.mp3" },
         "6": { title: "Outro", type: "", content_extension: "mp4" }
     }
 };
