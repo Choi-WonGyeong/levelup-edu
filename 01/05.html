@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="../common/css/style.css" />
     <link rel="stylesheet" href="../common/css/summary.css" />
 
-    <!-- summary 전용 -->
     <style>
         .video-wrap {
             width: 1010px;
@@ -36,15 +35,18 @@
             background: url("../common/images/summary/bg.png") no-repeat center/cover;
             z-index: 1;
         }
+
+        /* content-screen: 기본은 이벤트 비활성 */
         #content-screen {
             position: absolute;
-            top: 50%;
+            top: 38%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 90%;
+            width: 93%;
+            height: 68%;
             z-index: 2;
             pointer-events: none;
-            }
+        }
 
         #content-img {
             width: 100%;
@@ -52,7 +54,7 @@
             display: block;
         }
 
-
+        /* video player 는 z=3 */
         .video-js,
         #player {
             position: absolute;
@@ -63,96 +65,204 @@
             z-index: 3;
             background: transparent !important;
         }
+
+        .vjs-pip-button {
+            font-size: 16px;
+            padding: 0 10px;
+            cursor: pointer;
+        }
+
+        /* 🔥 end-text 는 이벤트 허용 + 최상단 */
+        #end-text {
+            pointer-events: auto;
+            z-index: 9999;
+        }
+
+        /* 🔥 우측상단 다운로드 버튼 */
+        #summary-download-btn {
+            position: absolute;
+            top: 10px;
+            right: 45px;
+            z-index: 10000;
+            background: rgba(254,254,254,0);
+            border: none;
+            border-radius: 5px;
+            padding: 0px 0px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            /* gap: 6px; */
+        }
+
+        #summary-download-btn img {
+            height: 33px;
+            width: auto;
+        }
+
+        /* #summary-download-btn:hover {
+            background: #3b3b3b;
+        } */
     </style>
 </head>
 
 <body>
-    <main>
-        <aside class="menu is-scrollable" id="side-menu">
-            <div class="side-menu-inner-wrap">
-                <div class="menu-title">
-                    <h3>목차</h3>
-                    <button class="button is-danger is-small is-outlined" type="button" onclick="closeNav()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                    <button id="index-btn-competency-test" class="button is-small is-outlined modal-button" data-target="modal-competency-test">
-                        역량진단
-                    </button>
-                </div>
-                <div class="menu-content-wrap"></div>
+<main>
+    <aside class="menu is-scrollable" id="side-menu">
+        <div class="side-menu-inner-wrap">
+            <div class="menu-title">
+                <h3>목차</h3>
+                <button class="button is-danger is-small is-outlined" type="button" onclick="closeNav()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <button id="index-btn-competency-test" class="button is-small is-outlined modal-button"
+                    data-target="modal-competency-test">
+                    역량진단
+                </button>
             </div>
-        </aside>
-
-        <div class="video-wrap">
-            <div class="video-dim is-overlay"></div>
-            <div class="summary-bg"></div>
-            <video id="player" class="video-js vjs-default-skin" controls preload="auto"></video>
-
-            <div id="content-screen">
-                <img id="content-img" src="../common/images/summary/content.png">
-            </div>
+            <div class="menu-content-wrap"></div>
         </div>
+    </aside>
 
-        <div id="modal-map" class="modal custom-modal">
-            <div class="modal-background"></div>
-            <div class="modal-content">
-                <div id="map-chapter-list" class="box"></div>
+    <div class="video-wrap">
+        <div class="video-dim is-overlay"></div>
+        <div class="summary-bg"></div>
+
+        <video id="player" class="video-js vjs-default-skin" controls preload="auto"></video>
+
+        <div id="content-screen">
+
+            <!-- 🔥 우측 상단 다운로드 버튼 -->
+            <button id="summary-download-btn">
+                <img src="../common/images/summary/download.png" alt="다운로드" />
+            </button>
+
+            <img id="content-img" src="../common/images/summary/content.png">
+
+            <!-- 🔥 mp3 종료 후 표시되는 텍스트 -->
+            <div id="end-text" style="
+                display:none;
+                position:absolute;
+                top: 10%;
+                left: 2%;
+                width: 95%;
+                height: 450px !important;
+                overflow-y: auto;
+                padding: 10px 15px;
+                font-size: 1.1em;
+                font-weight:normal;
+                color:#222;
+                text-align:left;
+                background: rgba(254,254,254,0);
+                border-radius: 6px;
+            ">
+                <!-- Summary Text -->
+                <b>1) 문화의 정의</b>
+                <br>(1) 일정한 목적, 생활 이상을 실현하고자 습득, 공유, 전달되는 행동 양식, 생활 양식이다.
+                <br>(2) 그 과정에서 만들어진 물질적, 정신적 산물을 통틀어 이르는 말이다.
+                <br>(3) 사전적 정의의 문화
+                <br>- 사회 또는 사회 구성원의 목적 실현에 기여해야 한다.
+                <br>- 누군가에게서 누군가로 전달되어야 한다.
+                <br>- 행동이나 산물로 보여야 한다.
+                <br>2) 기업문화의 정의 
+                <br>(1) 거시적인 문화의 정의를 기업이라는 조직 안으로 가져온 것이다.
+                <br>(2) 내외부 문제를 해결하는 과정의 경험을 축적, 공유하는 것이다.
+                <br>(3) 에드거 샤인 교수의 정의 : 조직 구성원이 내외부의 문제를 해결하는 과정에서 경험, 축적 공유한 것이다.
+                <br>3) 기업문화의 중요성
+                <br>(1) 조직과 경영자들은 기업문화의 혁신을 중요하게 여긴다.
+                <br>(2) 현재와 미래의 구성원도 기업 문화를 가장 중요하게 여긴다.
+                <br>(3) 문화를 바라보는 눈높이를 맞추는 과정이 필요하다.
+                <br>- 같은 용어를 사용하더라도 사람마다 정의나 기본 전제가 다르면 엉뚱한 결론에 도달할 수 있기 때문이다.
+                <br>1) 정체성이란?
+                <br>(1) 동일성에 기반한 정체성 
+                <br>- 환경이나 상황의 변화에도 불구하고 동일한 존재이고 싶다는 의미이다.
+                <br>- '우리다움'을 지향하는 정체성 또는 변하지 않는 정체성이다.
+                <br>(2) 자기성에 기반한 정체성 
+                <br>- 나는 누구인가를 끊임없이 고민하며 스스로 변화해가는 정체성이다.
+                <br>- '나다움'을 지향하는 정체성 또는 변화하는 정체성이라고 부른다.
+                <br>2) 인공지능의 발달
+                <br>(1) 인공지능의 발달은 인간에게 편리함이라는 선물을 준다.
+                <br>(2) 미래의 인간은 무슨 일을 할 것인지에 대한 과제를 던진다.
+                <br>(3) 예술 관련 분야에서조차 인공지능이 괄목할 만한 성과를 내며 논의가 한층 심화되고 있다.
+                <br>3) 모라벡의 역설
+                <br>(1) 미국의 로봇공학자인 한스 모라벡이 주장한 것이다.
+                <br>(2) 인간에게 쉬운 일은 컴퓨터에게 어렵고, 컴퓨터에게 쉬운 일은 인간에게 어렵다는 내용이다. 
+                <br>(3) 인간
+                <br>- 일상 행동은 쉽게 할 수 있다.
+                <br>- 복잡한 수식 계산, 반복적인 일을 정확하게 하는 것에는 약하다.
+                <br>(4) 인공지능이나 로봇
+                <br>- 인간이 일상적으로 하는 행동을 어려워한다.
+                <br>- 수리적 계산, 데이터 분석, 반복적 행동은 매우 쉽게 한다.
+                <br>- 컴퓨터의 성능과 기술의 발달로 모라벡의 역설이 사라질 것이라는 이야기도 있다.
             </div>
-            <button class="modal-close is-large"></button>
+
         </div>
+    </div>
 
-        <div id="modal-competency-test" class="modal custom-modal">
-            <div class="modal-background"></div>
-            <div class="modal-content">
-                <div class="box">
-                    <button class="button is-link" id="competency-test">역량진단 바로가기</button>
-                </div>
-            </div>
-            <button class="modal-close is-large"></button>
-        </div>
+</main>
 
-        <div id="modal-opinion" class="modal custom-modal">
-            <div class="modal-background"></div>
-            <div class="modal-content">
-                <div id="opinion-modal-content" class="box"></div>
-            </div>
-            <button class="modal-close is-large"></button>
-        </div>
+<script src="../common/lib/es6-promise.min.js"></script>
+<script src="../common/lib/es6-promise.auto.min.js"></script>
+<script src="../common/lib/js.cookie-2.2.1.min.js"></script>
 
-        <div id="modal-opinion-alert" class="modal custom-modal">
-            <div class="modal-background"></div>
-            <div class="modal-content is-huge has-text-centered">
-                <div class="modal-content">
-                    <div class="box is-flex">
-                        <p class="comment"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+<script src="../data/config.js"></script>
+<script src="../data/data.js"></script>
+<script src="../common/js/content_init.js"></script>
 
-    </main>
-    <script src="../common/lib/es6-promise.min.js"></script>
-    <script src="../common/lib/es6-promise.auto.min.js"></script>
+<script src="../common/lib/jquery/jquery.min.js"></script>
+<script src="../common/lib/video-js/video.js"></script>
 
-    <script src="../common/lib/js.cookie-2.2.1.min.js"></script>
+<script src="../common/js/module_video.js"></script>
+<script src="../common/js/application.js"></script>
 
-    <script src="../data/config.js"></script>
-    <script src="../data/data.js"></script>
-    <script src="../common/js/content_init.js"></script>
-    <script src="../common/lib/jquery/jquery.min.js"></script>
-    <script src="../common/lib/video-js/video.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
-    <script src="../common/js/module_video.js"></script>
+    const player = videojs("player");
+    player.src({ src: "../content/summary.mp3", type: "audio/mp3" });
 
-    <script src="../common/js/application.js"></script>
+    player.ready(function () {
 
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const player = videojs("player");
-        player.src({ src: "../content/summary.mp3", type: "audio/mp3" });
+        /* -------------------------------
+           🔹 PIP 버튼 추가
+        -------------------------------- */
+        const controlBar = player.getChild("controlBar");
+        const Button = videojs.getComponent("Button");
+        const pipButton = new Button(player, {});
+        pipButton.addClass("vjs-pip-button");
+        pipButton.el().innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="3">
+                <rect x="2" y="4" width="20" height="16"></rect>
+                <rect x="12" y="12" width="6" height="4" fill="currentColor"></rect>
+            </svg>
+        `;
+        controlBar.addChild(pipButton, {}, controlBar.children_.length - 1);
+
+        /* -------------------------------
+           🔥 mp3 종료 시 텍스트 표시 + 오버레이 활성화
+        -------------------------------- */
+        player.on("ended", function () {
+            const endText = document.getElementById("end-text");
+            const contentScreen = document.getElementById("content-screen");
+
+            endText.style.display = "block";
+
+            // 🔥 player 위로 완전히 올림
+            contentScreen.style.zIndex = "10";
+            contentScreen.style.pointerEvents = "auto";
+        });
     });
-    </script>
+
+    /* -------------------------------
+       🔹 다운로드 버튼 클릭
+    -------------------------------- */
+    document.getElementById("summary-download-btn")
+        .addEventListener("click", function () {
+            window.open("../document/summary/05.pdf", "_blank");
+        });
+
+});
+</script>
 
 </body>
-
 </html>
