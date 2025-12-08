@@ -62,7 +62,7 @@
             left: 0;
             width: 1010px !important;
             height: 568px !important;
-            z-index: 3;
+            z-index: 4;
             background: transparent !important;
         }
 
@@ -72,13 +72,13 @@
             cursor: pointer;
         }
 
-        /* 🔥 end-text 는 이벤트 허용 + 최상단 */
+        /* end-text 는 이벤트 허용 + 최상단 */
         #end-text {
             pointer-events: auto;
-            z-index: 9999;
+            z-index: 4;
         }
 
-        /* 🔥 우측상단 다운로드 버튼 */
+        /* 우측상단 다운로드 버튼 */
         #summary-download-btn {
             position: absolute;
             top: 10px;
@@ -102,6 +102,22 @@
         /* #summary-download-btn:hover {
             background: #3b3b3b;
         } */
+
+        @font-face {
+            font-family: 'Regular';
+            src: url('../common/font/Freesentation-4Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'SemiBold';
+            src: url('../common/font/Freesentation-6SemiBold.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        .custom-title-font{
+            font-family: 'SemiBold';
+        }
     </style>
 </head>
 
@@ -148,42 +164,43 @@
                 height: 450px !important;
                 overflow-y: auto;
                 padding: 10px 15px;
-                font-size: 1.1em;
+                font-size: 18pt;
                 font-weight:normal;
                 color:#222;
                 text-align:left;
                 background: rgba(254,254,254,0);
                 border-radius: 6px;
+                font-family: 'Regular';
             ">
                 <!-- Summary Text -->
-                <b>1) 문화의 정의</b>
+                <div class="custom-title-font">1) 문화의 정의</div>
                 <br>(1) 일정한 목적, 생활 이상을 실현하고자 습득, 공유, 전달되는 행동 양식, 생활 양식이다.
                 <br>(2) 그 과정에서 만들어진 물질적, 정신적 산물을 통틀어 이르는 말이다.
                 <br>(3) 사전적 정의의 문화
                 <br>- 사회 또는 사회 구성원의 목적 실현에 기여해야 한다.
                 <br>- 누군가에게서 누군가로 전달되어야 한다.
                 <br>- 행동이나 산물로 보여야 한다.
-                <br>2) 기업문화의 정의 
+                <div class="custom-title-font"><br>2) 기업문화의 정의 </div>
                 <br>(1) 거시적인 문화의 정의를 기업이라는 조직 안으로 가져온 것이다.
                 <br>(2) 내외부 문제를 해결하는 과정의 경험을 축적, 공유하는 것이다.
                 <br>(3) 에드거 샤인 교수의 정의 : 조직 구성원이 내외부의 문제를 해결하는 과정에서 경험, 축적 공유한 것이다.
-                <br>3) 기업문화의 중요성
+                <div class="custom-title-font"><br>3) 기업문화의 중요성</div>
                 <br>(1) 조직과 경영자들은 기업문화의 혁신을 중요하게 여긴다.
                 <br>(2) 현재와 미래의 구성원도 기업 문화를 가장 중요하게 여긴다.
                 <br>(3) 문화를 바라보는 눈높이를 맞추는 과정이 필요하다.
                 <br>- 같은 용어를 사용하더라도 사람마다 정의나 기본 전제가 다르면 엉뚱한 결론에 도달할 수 있기 때문이다.
-                <br>1) 정체성이란?
+                <div class="custom-title-font"><br>1) 정체성이란?</div>
                 <br>(1) 동일성에 기반한 정체성 
                 <br>- 환경이나 상황의 변화에도 불구하고 동일한 존재이고 싶다는 의미이다.
                 <br>- '우리다움'을 지향하는 정체성 또는 변하지 않는 정체성이다.
                 <br>(2) 자기성에 기반한 정체성 
                 <br>- 나는 누구인가를 끊임없이 고민하며 스스로 변화해가는 정체성이다.
                 <br>- '나다움'을 지향하는 정체성 또는 변화하는 정체성이라고 부른다.
-                <br>2) 인공지능의 발달
+                <div class="custom-title-font"><br>2) 인공지능의 발달</div>
                 <br>(1) 인공지능의 발달은 인간에게 편리함이라는 선물을 준다.
                 <br>(2) 미래의 인간은 무슨 일을 할 것인지에 대한 과제를 던진다.
                 <br>(3) 예술 관련 분야에서조차 인공지능이 괄목할 만한 성과를 내며 논의가 한층 심화되고 있다.
-                <br>3) 모라벡의 역설
+                <div class="custom-title-font"><br>3) 모라벡의 역설</div>
                 <br>(1) 미국의 로봇공학자인 한스 모라벡이 주장한 것이다.
                 <br>(2) 인간에게 쉬운 일은 컴퓨터에게 어렵고, 컴퓨터에게 쉬운 일은 인간에게 어렵다는 내용이다. 
                 <br>(3) 인간
@@ -232,7 +249,7 @@ document.addEventListener("DOMContentLoaded", function () {
         pipButton.el().innerHTML = `
             <svg width="18" height="18" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="3">
-                <rect x="2" y="4" width="20" height="16"></rect>
+                <rect x="2" y="4" width="20" height="16" rx="1" ry="1"></rect>
                 <rect x="12" y="12" width="6" height="4" fill="currentColor"></rect>
             </svg>
         `;

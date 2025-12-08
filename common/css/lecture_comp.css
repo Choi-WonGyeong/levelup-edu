@@ -1,6 +1,57 @@
 * {
   box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+  /* font-family: 'Segoe UI', sans-serif; */
+}
+
+@font-face {
+    font-family: 'Regular';
+    src: url('../font/Freesentation-4Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Medium';
+    src: url('../font/Freesentation-5Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SemiBold';
+    src: url('../font/Freesentation-6SemiBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Bold';
+    src: url('../font/Freesentation-7Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.custom-Regular-16 {
+  font-family: "Regular";
+}
+.custom-Regular-18 {
+  font-family: "Regular";
+}
+.custom-Regular-20 {
+  font-family: "Regular";
+  font-size: 20pt;
+}
+.custom-Medium-32 {
+  font-family: "Medium";
+}
+.custom-Medium-18 {
+  font-family: "Medium";
+}
+.custom-SemiBold-18 {
+  font-family: "SemiBold";
+}
+.custom-SemiBold-16 {
+  font-family: "SemiBold";
+}
+.custom-Bold-18 {
+  font-family: "Bold";
 }
 
 body {
@@ -64,12 +115,13 @@ h1 {
 }
 
 .question-title {
-  font-size: 16px;
+  font-family: "Meduim";
   margin-bottom: 10px;
   font-weight: bold;
 }
 
 .options label {
+  font-family: "Regular";
   display: inline-block;
   margin-right: 20px;
   cursor: pointer;
@@ -141,7 +193,7 @@ a:hover {
   flex-direction: column;
   text-align: center;
   color: #333;
-  font-family: "Noto Sans KR", sans-serif;
+  /* font-family: "Noto Sans KR", sans-serif; */
 }
 
 #start-screen .start-content {
@@ -157,6 +209,7 @@ a:hover {
 }
 
 #start-screen .sub-text {
+  font-family: "Regular";
   font-size: 20px;
   font-weight: 600;
   margin-top: 20px;

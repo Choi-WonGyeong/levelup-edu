@@ -1,34 +1,27 @@
 @import url("https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap");
 
 /* 공통: /common/fonts/ 아래에 woff2/woff 파일 배치 */
-@font-face{
-  font-family: "Presentation";
-  src: local("프리젠테이션 4 Regular"), local("Presentation 4 Regular"),
-       url("../fonts/presentation-4-regular.woff2") format("woff2"),
-       url("../fonts/presentation-4-regular.woff") format("woff");
-  font-weight: 400; font-style: normal; font-display: swap;
+@font-face {
+    font-family: 'Regular';
+    src: url('../common/font/Freesentation-4Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
-
-@font-face{
-  font-family: "Presentation";
-  src: local("프리젠테이션 5 Medium"), local("Presentation 5 Medium"),
-       url("../fonts/presentation-5-medium.woff2") format("woff2"),
-       url("../fonts/presentation-5-medium.woff") format("woff");
-  font-weight: 500; font-style: normal; font-display: swap;
+@font-face {
+    font-family: 'Medium';
+    src: url('../common/font/Freesentation-5Medimm.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
-
-@font-face{
-  font-family: "Presentation";
-  src: local("프리젠테이션 6 SemiBold"), local("Presentation 6 SemiBold"),
-       url("../fonts/presentation-6-semibold.woff2") format("woff2"),
-       url("../fonts/presentation-6-semibold.woff") format("woff");
-  font-weight: 600; font-style: normal; font-display: swap;
+@font-face {
+    font-family: 'SemiBold';
+    src: url('../common/font/Freesentation-6SemiBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
-
-@font-face{
-  font-family: "Presentation";
-  src: local("프리젠테이션 7 Bold"), local("Presentation 7 Bold"),
-       url("../fonts/presentation-7-bold.woff2") format("woff2"),
-       url("../fonts/presentation-7-bold.woff") format("woff");
-  font-weight: 700; font-style: normal; font-display: swap;
+@font-face {
+    font-family: 'Bold';
+    src: url('../common/font/Freesentation-7Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
