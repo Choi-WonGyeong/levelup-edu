@@ -5,8 +5,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
-    <style></style>
+    <title>Quiz</title>
+
+    <!-- 공통 라이브러리 -->
     <script src="../common/lib/fontawesome/all.min.js"></script>
     <script src="../common/lib/screenfull.js"></script>
     <link rel="stylesheet" href="../common/lib/video-js/video-js.css" />
@@ -15,122 +16,493 @@
     <link rel="stylesheet" href="../common/lib/video-overlay.css" />
     <link rel="stylesheet" href="../common/css/font.css" />
     <link rel="stylesheet" href="../common/css/style.css" />
-    <link rel="stylesheet" href="../common/css/opinion.css" />
-    <link rel="stylesheet" href="../common/css/quiz.css" />
-    <link rel="stylesheet" href="../common/css/summary.css" />
-    <!-- 🔹 퀴즈 전용 CSS 추가 -->
-    <link rel="stylesheet" href="../common/css/lecture_quiz.css" />
-    <style></style>
+
+    <style>
+        .video-wrap {
+            width: 1010px;
+            height: 568px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-js,
+        #player {
+            width: 1010px !important;
+            height: 568px !important;
+        }
+
+        /* 퀴즈 화면 */
+        #quiz-container {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1010px;
+            height: 568px;
+            background: #fff url("../common/images/quiz/bgr.png") no-repeat center/cover;
+            z-index: 9;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        #quiz-question {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            z-index: 9;
+        }
+
+        /* OX 버튼 */
+        #ox-buttons {
+            display: flex;
+            gap: 60px;
+            position: absolute;
+            left: 50%;
+            top: 30%;
+            transform: translateX(-50%);
+            width: 100%;
+            align-items: flex-end;
+        }
+
+        .ox-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: transform .3s ease;
+            transform-origin: bottom center;
+        }
+
+        .ox-btn img {
+            width: 500px;
+            height: auto;
+            display: block;
+            pointer-events: none;
+        }
+
+        .ox-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* 퀴즈 시작 버튼 */
+        #quiz-start-btn {
+            position: absolute;
+            bottom: 95px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 230px;
+            display: none;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        /* dim overlay */
+        #dim-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1010px;
+            height: 568px;
+            background: rgba(255, 255, 255, 0.45);
+            z-index: 7;
+            display: none;
+        }
+
+        /* 정답/오답 */
+        #correct-overlay,
+        #wrong-overlay,
+        #correct-comment-overlay,
+        #wrong-comment-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1010px;
+            height: 568px;
+            display: none;
+            z-index: 9;
+        }
+
+        #correct-overlay img,
+        #wrong-overlay img,
+        #correct-comment-overlay img,
+        #wrong-comment-overlay img {
+            width: 100%;
+            height: auto;
+            background: #fff;
+        }
+
+        /* 해설 텍스트 */
+        #comment-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            color: #000;
+            line-height: 1.4;
+            z-index: 10;
+            display: none;
+            pointer-events: none;
+        }
+
+        /* 해설창 문제 */
+        #comment-question {
+            position: absolute;
+            top: 50px;
+            right: 80px;
+            max-width: 28%;
+            text-align: right;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            z-index: 10;
+            line-height: 1.35;
+            display: none;
+        }
+
+        /* next */
+        #next-btn {
+            position: absolute;
+            right: 80px;
+            bottom: 40px;
+            height: 55px;
+            cursor: pointer;
+            display: none;
+            z-index: 10;
+        }
+
+        /* result 버튼 */
+        #result-btn {
+            position: absolute;
+            left: 50%;
+            bottom: 40px;
+            transform: translateX(-50%);
+            height: 60px;
+            cursor: pointer;
+            display: none;
+            z-index: 10;
+        }
+
+        /* 결과 화면 */
+        #result-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1010px;
+            height: 568px;
+            background: #fff url("../common/images/quiz/result_bgr.png") no-repeat center/cover;
+            z-index: 10;
+            display: none;
+        }
+
+        #result-title {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 33px;
+            font-weight: bold;
+            color: #222;
+            z-index: 5100;
+            letter-spacing: -1px;
+        }
+
+        #result-score {
+            position: absolute;
+            left: 50%;
+            top: 140px;
+            transform: translateX(-50%);
+            font-size: 24px;
+            text-align: center;
+            z-index: 5100;
+        }
+        .highlight {
+            color: rgb(255,166,0);
+        }
+        #result-note{
+            position: absolute; left: 50%; bottom: 30px; transform: translateX(-50%);
+            font-size: 16px; text-align: center; line-height: .7; white-space: pre-line;
+        }
+        /* 다시하기 버튼 */
+        #again-btn{
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 70px;
+            cursor: pointer;
+            z-index: 5200; /* 결과 화면 위 */
+        }
+
+        /* video.js 컨트롤바 항상 표시 */
+        .video-js .vjs-control-bar{
+            opacity: 1 !important;
+            visibility: visible !important;
+            z-index: 11 !important;
+            position: absolute !important;
+            bottom: 0 !important;
+        }
+
+        /* video.js 자동 숨김 방지 */
+        .video-js.vjs-user-inactive .vjs-control-bar{
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+    </style>
 </head>
 
 <body>
     <main>
-        <aside class="menu is-scrollable" id="side-menu">
-            <div class="side-menu-inner-wrap">
-                <div class="menu-title">
-                    <h3>목차</h3>
 
-                    <button class="button is-danger is-small is-outlined" type="button" onclick="closeNav()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                    <button id="index-btn-competency-test" class="button is-small is-outlined modal-button"
-                        data-target="modal-competency-test" type="button" onclick="">
-                        역량진단
-                    </button>
-                </div>
-
-                <div class="menu-content-wrap"></div>
-            </div>
-        </aside>
-
-        <!-- 🔹 01.html의 video-wrap을 퀴즈용 플레이어로 교체 -->
         <div class="video-wrap">
-            <video id="lecture-video" class="video-js vjs-default-skin" controls preload="auto"></video>
-        </div>
+            <div class="video-dim is-overlay"></div>
+            <div class="content-wrap"></div>
 
-        <div id="modal-map" class="modal custom-modal">
-            <div class="modal-background"></div>
-            <div class="modal-content">
-                <div id="map-chapter-list" class="box"></div>
-            </div>
-            <button class="modal-close is-large" aria-label="close"></button>
-        </div>
-        <div id="modal-competency-test" class="modal custom-modal">
-            <div class="modal-background"></div>
-            <div class="modal-content">
-                <div class="box">
-                    <button class="button is-link" id="competency-test">역량진단 바로가기</button>
+            <!-- 퀴즈 시작 -->
+            <img id="quiz-start-btn" src="../common/images/quiz/start.png">
+
+            <!-- dim -->
+            <div id="dim-overlay"></div>
+
+            <!-- 퀴즈 화면 -->
+            <div id="quiz-container">
+                <div id="quiz-question"></div>
+
+                <div id="ox-buttons">
+                    <button class="ox-btn" id="btn-o"><img src="../common/images/quiz/o.png"></button>
+                    <button class="ox-btn" id="btn-x"><img src="../common/images/quiz/x.png"></button>
                 </div>
             </div>
-            <button class="modal-close is-large" aria-label="close"></button>
-        </div>
-        <div id="modal-opinion" class="modal custom-modal">
-            <div class="modal-background"></div>
-            <div class="modal-content">
-                <!-- content -->
-                <div id="opinion-modal-content" class="box">
-                    <p>modal content here</p>
+
+            <!-- 정답/오답 -->
+            <div id="correct-overlay"><img src="../common/images/quiz/correct.png"></div>
+            <div id="wrong-overlay"><img src="../common/images/quiz/wrong.png"></div>
+
+            <!-- 해설 문제 -->
+            <div id="comment-question"></div>
+
+            <!-- 해설 -->
+            <div id="correct-comment-overlay"><img src="../common/images/quiz/correct_comment.png"></div>
+            <div id="wrong-comment-overlay"><img src="../common/images/quiz/wrong_comment.png"></div>
+
+            <div id="comment-text"></div>
+
+            <!-- next / result -->
+            <img id="next-btn" src="../common/images/quiz/next.png">
+            <img id="result-btn" src="../common/images/quiz/result.png">
+
+            <!-- 결과 화면 -->
+            <div id="result-container">
+                <div id="result-title">결과 확인</div>
+                <div id="result-score">
+                    총 3문항 중 <span id="score-number" class="highlight">0</span>문항을 맞히셨습니다.
                 </div>
-                <!-- end content -->
-            </div>
-            <button class="modal-close is-large" aria-label="close"></button>
-        </div>
-        <div id="modal-opinion-alert" class="modal custom-modal">
-            <div class="modal-background"></div>
-            <div class="modal-content is-huge has-text-centered">
-                <div class="modal-content">
-                    <div class="box is-flex">
-                        <p class="comment"></p>
-                    </div>
+                <img id="again-btn" src="../common/images/quiz/again.png">
+                <div id="result-note">
+                    본 퀴즈는 평가에 반영되지 않습니다.<br>
+                    학습 이해를 돕기 위한 활동입니다.
                 </div>
             </div>
+
         </div>
     </main>
 
-    <!-- 🔹 04_.html의 퀴즈 오버레이 그대로 추가 -->
-    <!-- 인트로 종료 후 뜨는 시작 버튼(영상 위 오버레이) -->
-    <img id="start-btn" src="../common/images/quiz/start.png" alt="시작" onclick="startQuiz()" style="display:none;" />
-
-    <!-- 퀴즈 영역(영상 위 오버레이) -->
-    <div id="quiz-container">
-        <div class="quiz-question" id="quiz-question"></div>
-        <div class="quiz-buttons">
-            <button id="btnO">
-                <img src="../common/images/quiz/o.png" alt="O" class="quiz-btn-img">
-            </button>
-            <button id="btnX">
-                <img src="../common/images/quiz/x.png" alt="X" class="quiz-btn-img">
-            </button>
-        </div>
-        <div id="quiz-feedback"></div>
-
-        <div id="correct-overlay">
-            <img id="correct-o" src="../common/images/quiz/correct_o.png" alt="correct O" />
-            <img id="correct-x" src="../common/images/quiz/correct_x.png" alt="correct X" />
-        </div>
-    </div>
-
-    <div id="quiz-result" style="display:none;">
-        <h2 id="result-title">결과 확인</h2>
-        <p id="result-score">총 3문항 중 0문항을 맞히셨습니다.</p>
-        <img id="retry-btn" src="../common/images/quiz/again.png" alt="다시 풀기" />
-        <p id="result-note">
-            본 퀴즈는 평가에 반영되지 않습니다.<br>
-            학습 이해를 돕기 위한 활동입니다.
-        </p>
-    </div>
-
-    <!-- 🔹 이 페이지에서는 autoplay / summary / 기존 quiz.js 안 씀 -->
-    <!-- 필요한 최소 스크립트만 사용 -->
     <script src="../common/lib/es6-promise.min.js"></script>
     <script src="../common/lib/es6-promise.auto.min.js"></script>
     <script src="../common/lib/js.cookie-2.2.1.min.js"></script>
-
-    <script src="../common/lib/video-js/video.js"></script>
-    <script src="../data/data.js"></script>
     <script src="../data/config.js"></script>
-    <!-- <script src="../common/js/module_video.js"></script> -->
-    <script src="../common/js/lecture_quiz.js"></script>
-</body>
+    <script src="../data/data.js"></script>
+    <script src="../common/js/content_init.js"></script>
+    <script src="../common/lib/jquery/jquery.min.js"></script>
+    <script src="../common/lib/video-js/video.js"></script>
+    <script src="../common/js/module_video.js"></script>
+    <script src="../common/js/application.js"></script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const player = videojs("player");
+
+    player.src({
+        src: "../content/quiz.mp4",
+        type: "video/mp4"
+    });
+
+    player.on("ended", () => {
+        document.getElementById("quiz-start-btn").style.display = "block";
+    });
+
+    /* -----------------------------
+       ELEMENTS
+    ----------------------------- */
+    const quizStartBtn = document.getElementById("quiz-start-btn");
+    const quizContainer = document.getElementById("quiz-container");
+    const quizQuestion = document.getElementById("quiz-question");
+
+    const btnO = document.getElementById("btn-o");
+    const btnX = document.getElementById("btn-x");
+
+    const correctOverlay = document.getElementById("correct-overlay");
+    const wrongOverlay = document.getElementById("wrong-overlay");
+
+    const correctCommentOverlay = document.getElementById("correct-comment-overlay");
+    const wrongCommentOverlay = document.getElementById("wrong-comment-overlay");
+
+    const commentText = document.getElementById("comment-text");
+    const commentQuestion = document.getElementById("comment-question");
+
+    const nextBtn = document.getElementById("next-btn");
+    const resultBtn = document.getElementById("result-btn");
+
+    const dim = document.getElementById("dim-overlay");
+
+    const resultContainer = document.getElementById("result-container");
+    const scoreNumber = document.getElementById("score-number");
+    const againBtn = document.getElementById("again-btn");
+
+    /* -----------------------------
+       문제 데이터
+    ----------------------------- */
+    const quizData = [
+        { question: "문제 1. 여기에 첫 번째 문제가 들어갑니다.", answer: "O", comment: "해설 1 내용입니다." },
+        { question: "문제 2. 여기는 두 번째 문제입니다.", answer: "X", comment: "해설 2 내용입니다." },
+        { question: "문제 3. 마지막 문제입니다.", answer: "O", comment: "해설 3 내용입니다." }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    /* -----------------------------
+       문제 로딩 함수
+    ----------------------------- */
+    function loadQuestion() {
+
+        quizQuestion.innerText = quizData[current].question;
+
+        btnO.style.display = "inline-block";
+        btnX.style.display = "inline-block";
+
+        quizContainer.style.visibility = "visible";
+
+        correctOverlay.style.display = "none";
+        wrongOverlay.style.display = "none";
+        correctCommentOverlay.style.display = "none";
+        wrongCommentOverlay.style.display = "none";
+
+        commentText.style.display = "none";
+        commentQuestion.style.display = "none";
+
+        nextBtn.style.display = "none";
+        resultBtn.style.display = "none";
+
+        dim.style.display = "none";
+    }
+
+    /* -----------------------------
+       퀴즈 시작
+    ----------------------------- */
+    quizStartBtn.addEventListener("click", () => {
+        quizStartBtn.style.display = "none";
+
+        quizContainer.style.display = "block";
+        loadQuestion();
+    });
+
+    /* -----------------------------
+       정답 처리
+    ----------------------------- */
+    function handleAnswer(userAnswer) {
+
+        const isCorrect = userAnswer === quizData[current].answer;
+
+        if (isCorrect) score++; // ⭐ 정답일 때 점수 증가
+
+        btnO.style.display = "none";
+        btnX.style.display = "none";
+
+        dim.style.display = "block";
+
+        if (isCorrect) correctOverlay.style.display = "block";
+        else wrongOverlay.style.display = "block";
+
+        setTimeout(() => {
+
+            correctOverlay.style.display = "none";
+            wrongOverlay.style.display = "none";
+
+            quizContainer.style.visibility = "hidden";
+
+            commentText.innerText = quizData[current].comment;
+            commentText.style.display = "block";
+
+            commentQuestion.innerText = quizData[current].question;
+            commentQuestion.style.display = "block";
+
+            if (isCorrect) correctCommentOverlay.style.display = "block";
+            else wrongCommentOverlay.style.display = "block";
+
+            if (current < quizData.length - 1)
+                nextBtn.style.display = "block";
+            else
+                resultBtn.style.display = "block";
+
+        }, 1000);
+    }
+
+    btnO.addEventListener("click", () => handleAnswer("O"));
+    btnX.addEventListener("click", () => handleAnswer("X"));
+
+    /* -----------------------------
+       다음 문제
+    ----------------------------- */
+    nextBtn.addEventListener("click", () => {
+
+        nextBtn.style.display = "none";
+
+        commentText.style.display = "none";
+        commentQuestion.style.display = "none";
+
+        correctCommentOverlay.style.display = "none";
+        wrongCommentOverlay.style.display = "none";
+
+        current++;
+        loadQuestion();
+    });
+
+    /* -----------------------------
+       결과 화면 표시
+    ----------------------------- */
+    resultBtn.addEventListener("click", () => {
+
+        // 점수 반영
+        scoreNumber.innerText = score;
+
+        // 결과 화면 띄우기
+        resultContainer.style.display = "block";
+    });
+
+    /* -----------------------------
+       다시하기 버튼
+    ----------------------------- */
+    againBtn.addEventListener("click", () => {
+
+        // 다시 처음 상태로
+        current = 0;
+        score = 0;
+
+        resultContainer.style.display = "none";
+        quizContainer.style.display = "block";
+
+        loadQuestion();
+    });
+
+});
+</script>
+
+
+</body>
 </html>
