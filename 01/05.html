@@ -233,7 +233,7 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-
+    
     const player = videojs("player");
     player.src({ src: "../content/summary.mp3", type: "audio/mp3" });
 
@@ -258,18 +258,45 @@ document.addEventListener("DOMContentLoaded", function () {
         /* -------------------------------
            🔥 mp3 종료 시 텍스트 표시 + 오버레이 활성화
         -------------------------------- */
+        const endText = document.getElementById("end-text");
+        const contentScreen = document.getElementById("content-screen");
+        let __trig_4_side__ = false;
+        // contentScreen.style.zIndex = "8";
+        // contentScreen.style.pointerEvents = "none";
+        
         player.on("ended", function () {
-            const endText = document.getElementById("end-text");
-            const contentScreen = document.getElementById("content-screen");
-
-            endText.style.display = "block";
-
-            // 🔥 player 위로 완전히 올림
-            contentScreen.style.zIndex = "10";
-            contentScreen.style.pointerEvents = "auto";
+            endText.style.display = "block";    
+            // 🔥 player 위로 완전히 올림   
+            contentScreen.style.pointerEvents = "auto"; 
+            __trig_4_side__ = true;
         });
-    });
+    const observer = new MutationObserver(() => {
+    const sheet = document.querySelector('.vjs-side-sheet');
+    
+    if(__trig_4_side__)
+    {
+        if (!sheet) return;
 
+        if (sheet.classList.contains('on')) {
+        // console.log('📖 toc 사이드바 열림');
+        contentScreen.style.zIndex = "3" ;
+        contentScreen.style.pointerEvents = "none";
+        } else {
+        // console.log('📖 toc 사이드바 닫힘');
+        contentScreen.style.zIndex = "8";
+        contentScreen.style.pointerEvents = "auto";
+        }
+    }
+    
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['class']
+  });
+});
     /* -------------------------------
        🔹 다운로드 버튼 클릭
     -------------------------------- */
