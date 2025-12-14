@@ -40,6 +40,7 @@
 }
 .custom-Medium-32 {
   font-family: "Medium";
+  font-size: 32px !important;
 }
 .custom-Medium-18 {
   font-family: "Medium";
@@ -117,6 +118,7 @@ h1 {
 .question-title {
   font-family: "Meduim";
   margin-bottom: 10px;
+  font-size: 16px;
   font-weight: bold;
 }
 
@@ -124,6 +126,7 @@ h1 {
   font-family: "Regular";
   display: inline-block;
   margin-right: 20px;
+  font-size: 16px;
   cursor: pointer;
 }
 
@@ -202,7 +205,7 @@ a:hover {
 }
 
 #start-screen p {
-  font-size: 32px;
+  /* font-size: 32px; */
   font-weight: 600;
   line-height: 1.6;
   margin: 10px 0;
@@ -302,18 +305,22 @@ a:hover {
 }
 
 .result-title { /* freesentation 폰트 6 */
+  font-family: "SemiBold";
   text-align: left;
   font-size: 27px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-top: 40px;
+  margin-bottom: 35px;
 }
 
 .result-text { /* freesentation 폰트 4 */
+  font-family: "Regular";
   font-size: 18px;
   margin-bottom: 10px;
 }
 
 .result-subtext { /* freesentation 폰트 4 */
+  font-family: "Regular";
   font-size: 18px;
   margin-bottom: 30px;
 }
